@@ -51,6 +51,7 @@ struct PlayerItem {
           .fontWeight(FontWeight.Medium)
         Text('位置:'+ this.Player.playerPosition)
           .fontSize(14)
+
           .textAlign(TextAlign.Center)
         Text('进球数:'+ this.Player.playerGoals)
           .fontSize(14)
