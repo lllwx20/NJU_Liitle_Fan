@@ -6,7 +6,6 @@ export default class ResponseResult {
    * Code returned by the network request: success, fail.
    */
   code: string;
-
   /**
    * Message returned by the network request.
    */
