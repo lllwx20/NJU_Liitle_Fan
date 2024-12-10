@@ -9,19 +9,10 @@ struct Index {
   @State currentIndex: number = 0
   private controller: TabsController = new TabsController()
   private teams : Team[] = [];
-
+  myScroller : Scroller = new Scroller()
+  @State yOffset : number = 0
   aboutToAppear(): void {
-    this.teams.push( {
-      id: 0,
-      name: "排头",
-      point: 0,
-      games : 0,
-      win : 0,
-      draw : 0,
-      lose : 0,
-      score : 0,
-      loss : 0
-    })
+
       for(let i = 0; i < 20; i++) {
         this.teams.push({
           id: 0,
@@ -46,7 +37,7 @@ struct Index {
         .fontColor(this.currentIndex === targetIndex ? '#28bff1' : '#8a8a8a')
     }
     .width('100%')
-    .height(40)
+    .height(50)
     .justifyContent(FlexAlign.Center)
     .onClick(() => {
       this.currentIndex = targetIndex
@@ -60,28 +51,81 @@ struct Index {
 
       }.tabBar(this.TabBuilder("首页", 0, $r('app.media.FirstPageSelected'), $r('app.media.FirstPageList')))
       TabContent() {
-        List() {
-          ForEach(this.teams, (team : Team, index :number)=> {
-            ListItem() {
-                TeamItem({name : team.name,
-                  point : team.point,
-                  index : index,
-                  games : team.games,
-                  win : team.win,
-                  draw : team.draw,
-                  lose : team.lose,
-                  score : team.score,
-                  loss : team.loss})
-            }
+        Stack() {
+          Scroll(this.myScroller) {
+            List() {
+              ForEach(this.teams, (team: Team, index: number) => {
+                ListItem() {
+                  TeamItem({
+                    tid: team.id,
+                    name: team.name,
+                    point: team.point,
+                    index: index,
+                    games: team.games,
+                    win: team.win,
+                    draw: team.draw,
+                    lose: team.lose,
+                    score: team.score,
+                    loss: team.loss
+                  })
+                }
+              })
+            }.margin({ top: 50 })
+          }
+          .width('100%')
+          .height('100%')
+          .onWillScroll(()=> {
+              this.yOffset = this.myScroller.currentOffset().yOffset
+            console.log('y:'+this.yOffset)
           })
-        }.scrollBar(BarState.Off)
+
+          Row() {
+            Text("排名")
+              .margin({ left: 12 })
+              .fontSize(15)
+            Text("球队")
+              .margin({ left: 30 })
+              .fontSize(15)
+            Text("场次")
+              .margin({ left: 39 })
+              .fontSize(15)
+            Text("胜/平/负")
+              .margin({ left: 23 })
+              .fontSize(15)
+            Text("进/失球")
+              .margin({ left: 23 })
+              .fontSize(15)
+            Text("积分")
+              .margin({ left: 26 })
+              .fontSize(15)
+          }
+          .position({
+            x: 0,
+            y: 0
+          })
+          .alignSelf(ItemAlign.Center)
+          .backgroundColor('#F1F3F5')
+          .width('100%')
+          .height(50)
+          .hoverEffect(1)
+          if(this.yOffset > 100) {
+            Image($r('app.media.ToTop'))
+              .width(60)
+              .height(60)
+              .position({ x: 175, y: 50 })
+              .backgroundColor(Color.White)
+              .clipShape(new Circle({ width: 60, height: 60 }))
+              .onClick(() => {
+                this.myScroller.scrollEdge(Edge.Top)
+              })
+          }
+        }
       }.tabBar(this.TabBuilder("积分榜", 1, $r('app.media.RatingSelected'), $r('app.media.RatingList')))
       TabContent() {
 
       }.tabBar(this.TabBuilder("比赛", 2, $r('app.media.GameSelected'), $r('app.media.GameList')))
       TabContent() {
         PlayerPage()
-          .padding({bottom : 80})
       }.tabBar(this.TabBuilder("球员", 3, $r('app.media.PlayerSelected'), $r('app.media.PlayerList')))
     }
   }
