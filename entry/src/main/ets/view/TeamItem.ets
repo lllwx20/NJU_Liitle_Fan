@@ -76,7 +76,7 @@ export struct TeamItem {
           Text("胜/平/负")
             .margin({ left: 15 })
             .fontSize(20)
-          Text("进/失球")
+          Text("进/失")
             .margin({ left: 15 })
             .fontSize(20)
           Text("积分")

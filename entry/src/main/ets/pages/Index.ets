@@ -22,7 +22,7 @@ struct Index {
       score : 0,
       loss : 0
     })
-      for(let i = 0; i < 10; i++) {
+      for(let i = 0; i < 20; i++) {
         this.teams.push({
           id: 0,
           name: "软院",
@@ -46,7 +46,7 @@ struct Index {
         .fontColor(this.currentIndex === targetIndex ? '#28bff1' : '#8a8a8a')
     }
     .width('100%')
-    .height(50)
+    .height(40)
     .justifyContent(FlexAlign.Center)
     .onClick(() => {
       this.currentIndex = targetIndex
@@ -74,13 +74,14 @@ struct Index {
                   loss : team.loss})
             }
           })
-        }
+        }.scrollBar(BarState.Off)
       }.tabBar(this.TabBuilder("积分榜", 1, $r('app.media.RatingSelected'), $r('app.media.RatingList')))
       TabContent() {
 
       }.tabBar(this.TabBuilder("比赛", 2, $r('app.media.GameSelected'), $r('app.media.GameList')))
       TabContent() {
         PlayerPage()
+          .padding({bottom : 80})
       }.tabBar(this.TabBuilder("球员", 3, $r('app.media.PlayerSelected'), $r('app.media.PlayerList')))
     }
   }
