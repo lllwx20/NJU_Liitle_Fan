@@ -1,5 +1,6 @@
 import CommonConstants from '../constants/CommonConstants';
 import { Player } from '../model/Player';
+import { data } from '@kit.TelephonyKit';
 
 @Component
 @Preview
@@ -12,12 +13,30 @@ export default struct PlayerItem {
   build() {
 
     Stack({ alignContent: Alignment.TopEnd }) {
-          // 添加排名
+        Text(''+this.data)
+        .fontColor(Color.White)
+        .textAlign(TextAlign.Center)
+        .fontSize(this.data === -1 ? 0 : 24)
+        .fontWeight(FontWeight.Medium)
+        .margin({ top: 16, right: 76 })
+        .width(70)
+
+        if(this.data === -1){
+          Image($r('app.media.t1'))
+          .width(40)
+          .height(40)
+          .autoResize(true)
+          .margin({ top: 10, right: 9 })
+        }else{
           Text(''+this.rank)
-          .fontSize(20)
-          .fontColor(this.rank == 1 ? Color.Red : this.rank == 2 ? Color.Orange : this.rank == 3 ? Color.Yellow : Color.White)
-          .fontWeight(FontWeight.Bold)
-          .margin({ top: 4, right: 8 })
+            .fontSize(25)
+            .fontColor(this.rank == 1 ? Color.Red : this.rank == 2 ? Color.Orange : this.rank == 3 ? Color.Yellow : '#D3D3D3')
+            .fontWeight(FontWeight.Bold)
+            .textAlign(TextAlign.End)
+            .margin({ top: 16, right: 16 })
+        }
+
+
 
           Row() {
             Image($r(this.PlayerItem.playerImageUrl))
@@ -27,34 +46,27 @@ export default struct PlayerItem {
               .margin({ left: 1 })
             Column(){
               Text(this.PlayerItem.playerName)
-                .fontSize(18)
+                .fontSize(16)
                 .fontColor(Color.White)
-                .fontWeight(FontWeight.Bold)
+                .fontWeight(FontWeight.Normal)
                 .textAlign(TextAlign.Start)
-                .margin({ left: 1 ,top : 1})
-                .width(CommonConstants.FULL_WIDTH)
+                .margin({ left: 1, top: 1 })
                 .height('55%')
-              Row(){
-                //Text('位置:' + this.PlayerItem.playerPosition)
-                //  .fontColor(Color.White)
-                //  .textAlign(TextAlign.Start)
-                Text('软院')
-                  .fontColor(Color.White)
-                  .textAlign(TextAlign.Start)
-                Text('数据:' + this.data)
-                  .fontColor(Color.White)
-                  .textAlign(TextAlign.End)
-              }
-              .width('100%')
-              .height('45%')
-              .padding({right: 8 })
-              .justifyContent(FlexAlign.SpaceBetween)
+                .width(CommonConstants.FULL_WIDTH)
+              Text(this.PlayerItem.team + this.PlayerItem.number + '号')
+                .fontSize(13)
+                .fontColor(Color.White)
+                .fontWeight(FontWeight.Normal)
+                .textAlign(TextAlign.Start)
+                .width(CommonConstants.FULL_WIDTH)
+                .height('45%')
+                .padding({right: 8 })
             }
             .width('80%')
-            .height('100%')
+            .height(CommonConstants.FULL_HEIGHT)
             .justifyContent(FlexAlign.SpaceBetween)
           }
-          .width('100%')
+          .width(CommonConstants.FULL_WIDTH)
           .justifyContent(FlexAlign.SpaceBetween)
       }
     .backgroundImage(this.backgroundImg)

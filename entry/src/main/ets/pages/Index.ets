@@ -109,12 +109,11 @@ struct Index {
           .height(50)
           .hoverEffect(1)
           if(this.yOffset > 100) {
-            Image($r('app.media.ToTop'))
-              .width(60)
-              .height(60)
-              .position({ x: 175, y: 50 })
-              .backgroundColor(Color.White)
-              .clipShape(new Circle({ width: 60, height: 60 }))
+            Image($r("app.media.toTop4"))
+              .width(50)
+              .height(50)
+              .position({ x: 175, y: 30 })
+              .clipShape(new Circle({ width: 50, height: 50 }))
               .onClick(() => {
                 this.myScroller.scrollEdge(Edge.Top)
               })
@@ -126,6 +125,7 @@ struct Index {
       }.tabBar(this.TabBuilder("比赛", 2, $r('app.media.GameSelected'), $r('app.media.GameList')))
       TabContent() {
         PlayerPage()
+          .padding({bottom : 75})
       }.tabBar(this.TabBuilder("球员", 3, $r('app.media.PlayerSelected'), $r('app.media.PlayerList')))
     }
   }
