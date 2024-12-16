@@ -17,6 +17,13 @@ export class Player {
   yellowCard: number;
   foul: number;
   foulAgainst: number;
+  bornYearMonth: string;
+  playYear: number;
+  weight: number;
+  height: number;
+  playedGame: number;
+  playedTime: number;
+  starterGame: number;
 
   constructor(
     id: number = 0,
@@ -36,7 +43,14 @@ export class Player {
     redCard: number = 0,
     yellowCard: number = 0,
     foul: number = 0,
-    foulAgainst: number = 0
+    foulAgainst: number = 0,
+    bornYearMonth: string= "",
+    playYear: number= 0,
+    weight: number= 0,
+    height: number= 0,
+    playedGame: number= 0,
+    playedTime: number= 0,
+    starterGame: number= 0,
   ) {
     this.id = id;
     this.number = number;
@@ -56,6 +70,13 @@ export class Player {
     this.yellowCard = yellowCard;
     this.foul = foul;
     this.foulAgainst = foulAgainst;
+    this.bornYearMonth  = bornYearMonth
+    this.playYear = playYear
+    this.weight = weight
+    this.height = height
+    this.playedGame = playedGame
+    this.playedTime = playedTime
+    this.starterGame = starterGame
   }
 }
 

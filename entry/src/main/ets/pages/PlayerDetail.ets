@@ -1,6 +1,9 @@
 import { router } from '@kit.ArkUI';
 import CommonConstants from '../constants/CommonConstants';
 import { Player } from '../model/Player';
+import PlayerData from '../view/PlayerData';
+import PlayerInfo from '../view/PlayerInfo';
+import PlayerRadarChart from '../view/PlayerRadarChart';
 
 @Entry
 @Component
@@ -91,13 +94,13 @@ struct  PlayerDetail {
       .height('25%')
       Tabs() {
         TabContent() {
-
+          PlayerInfo({Player : this.Player})
         }.tabBar("资料")
         TabContent() {
-
+          PlayerData({Player : this.Player})
         }.tabBar("数据")
         TabContent() {
-
+          PlayerRadarChart({Player : this.Player})
         }.tabBar("能力图")
       }
 
