@@ -45,7 +45,7 @@ export default struct PlayerRadarChart {
 
   private valueSelectedListener: OnChartValueSelectedListener = {
     onValueSelected: (e: EntryOhos, h: Highlight) => {
-      Logger.info("RadarChartPage onValueSelected: " + e.getX());
+      Logger.info("雷达图选中值: " + e.getX());
     },
     onNothingSelected: () => {
 
@@ -117,7 +117,7 @@ export default struct PlayerRadarChart {
     if (xAxis) {
       xAxis.setPosition(XAxisPosition.BOTTOM);
       xAxis.setDrawGridLines(false);
-      xAxis.setTextSize(24);  // 增大轴标签文字大小
+      xAxis.setTextSize(8);  // 增大轴标签文字大小
       xAxis.setYOffset(0);
       xAxis.setXOffset(0);
       xAxis.setGranularity(1);
@@ -131,7 +131,7 @@ export default struct PlayerRadarChart {
     let yAxis: YAxis | null = this.model.getYAxis();
     if (yAxis) {
       yAxis.setLabelCount(5, false);
-      yAxis.setTextSize(20);
+      yAxis.setTextSize(8);
       yAxis.setAxisMinimum(0);
       yAxis.setAxisMaximum(100);
       yAxis.setDrawLabels(false);
@@ -167,8 +167,8 @@ export default struct PlayerRadarChart {
     sets.add(dataSet);
 
     let data: RadarData = new RadarData(sets);
-    data.setValueTextSize(20);
-    data.setDrawValues(false);
+    data.setValueTextSize(10);
+    data.setDrawValues(true);
     data.setValueTextColor(this.TEXT_COLOR);
     this.model.setData(data);
   }
