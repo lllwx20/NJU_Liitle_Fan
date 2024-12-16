@@ -1,14 +1,11 @@
 import { router } from '@kit.ArkUI'
 
-class routerParams{
-  public src : number = 0
-}
 
 @Entry
 @Component
 struct TeamDetail {
-  @State params : routerParams = router.getParams() as routerParams
-  @State tid : number = this.params.src
+  params: object = router.getParams();
+  @State tid: number = this.params['tid'];
   @State name : string = "软院"
   @State score : number = 0
   @State index : number = 0
@@ -31,6 +28,7 @@ struct TeamDetail {
       .backgroundImagePosition(Alignment.Center)
       .backgroundImageSize(ImageSize.FILL)
       .width('100%')
+      .height('25%')
       Tabs() {
         TabContent() {
 

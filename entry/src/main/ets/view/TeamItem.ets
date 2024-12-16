@@ -1,12 +1,6 @@
 import { router } from "@kit.ArkUI";
 
-class routerParams {
-  src: number
 
-  constructor(i: number) {
-    this.src = i
-  }
-}
 
 @Component
 export struct TeamItem {
@@ -88,7 +82,7 @@ export struct TeamItem {
     .onClick(() => {
       router.pushUrl({
         url: 'pages/TeamDetail',
-        params: new routerParams(this.tid)
+        params: {tid : this.tid}
       })
     })
   }

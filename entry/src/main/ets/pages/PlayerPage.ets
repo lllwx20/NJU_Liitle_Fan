@@ -3,14 +3,14 @@ import PlayerViewModel from '../viewmodel/PlayerViewModel';
 import Logger from '../utils/Logger';
 import CommonConstants from '../constants/CommonConstants';
 import PlayerItem from '../view/PlayerItem';
-
+import { promptAction } from '@kit.ArkUI';
 
 
 @Component
 export default struct PlayerPage {
 
 
-  @State ClassifyArray: Array<ClassifyModel> = [
+  private ClassifyArray: Array<ClassifyModel> = [
     new ClassifyModel(0, '全部'),
     new ClassifyModel(1, '进球'),
     new ClassifyModel(2, '助攻'),
@@ -29,7 +29,7 @@ export default struct PlayerPage {
   @State changeValue: string = ''
   @State submitValue: string = ''
   @State playerList : Array<Player> = [];
-  @State originPlayerList : Array<Player> = [];
+  private originPlayerList : Array<Player> = [];
   private classifyScroller: Scroller = new Scroller();
   private scroller: Scroller = new Scroller();
   private controller: SearchController = new SearchController()
@@ -106,7 +106,7 @@ export default struct PlayerPage {
       const lowerKeyword = keyword.toLowerCase();
       return player.team.toLowerCase() === lowerKeyword || // 按球队过滤
       player.playerName.toLowerCase().includes(lowerKeyword) || // 按名称过滤
-      player.number.toString().includes(lowerKeyword)     // 按号码过滤
+      player.number.toString() === lowerKeyword   // 按号码过滤
     });
 
     // 打印筛选结果
@@ -127,6 +127,12 @@ export default struct PlayerPage {
             .onSubmit((value: string) => {
               this.submitValue = value
               this.filterPlayerList(value);
+              if(this.playerList.length === 0){
+                promptAction.showToast({
+                  message: '未找到该球员',
+                  bottom: 400
+                });
+              }
             })
             .onChange((value: string) => {
               if (!value) {
@@ -213,15 +219,16 @@ export default struct PlayerPage {
                     data: this.getPlayerData(item)
                   })
                 }
-              }, (item: Player) => `${item.id}-${this.currentClassify}`) // 添加当前分类作为标识的一部分
+              }, (item: Player) => `${item.id}-${this.currentClassify}-${this.changeValue}`) // 添加当前分类作为标识的一部分
             }
             .scrollBar(BarState.Off)
             .padding({ left: 10, right: 10 })
+            .animation({
+              duration: 300,
+              curve: Curve.Smooth
+            })
+
           }
-          .animation({
-            duration: 300,
-            curve: Curve.Smooth
-          })
           .padding({ top: 10 })
           .alignItems(HorizontalAlign.Start)
           .width('80%')

@@ -125,7 +125,7 @@ struct Index {
       }.tabBar(this.TabBuilder("比赛", 2, $r('app.media.GameSelected'), $r('app.media.GameList')))
       TabContent() {
         PlayerPage()
-          .padding({bottom : 75})
+          .padding({bottom : 78})
       }.tabBar(this.TabBuilder("球员", 3, $r('app.media.PlayerSelected'), $r('app.media.PlayerList')))
     }
   }
