@@ -102,7 +102,7 @@ struct  PlayerDetail {
         TabContent() {
           PlayerRadarChart({Player : this.Player})
         }.tabBar("能力图")
-      }
+      }.scrollable(false)
 
     }
   }
