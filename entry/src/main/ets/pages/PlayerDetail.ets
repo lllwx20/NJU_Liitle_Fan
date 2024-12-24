@@ -4,12 +4,27 @@ import { Player } from '../model/Player';
 import PlayerData from '../view/PlayerData';
 import PlayerInfo from '../view/PlayerInfo';
 import PlayerRadarChart from '../view/PlayerRadarChart';
+import { BusinessError } from '@kit.BasicServicesKit';
+import PlayerRate from '../view/PlayerRate';
+import PlayerViewModel from '../viewmodel/PlayerViewModel';
 
 @Entry
 @Component
 struct  PlayerDetail {
   @State params: object = router.getParams();
   @State Player: Player = this.params['Player'];
+
+  refreshPlayer() {
+    PlayerViewModel.getPlayerById(this.Player.id)
+      .then((data) => {
+        console.info('获取新数据成功', JSON.stringify(data));  // 添加日志
+        this.Player = data;  // 确保是新的对象引用
+      })
+      .catch(() => {
+        console.error('刷新数据失败');  // 添加错误日志
+      });
+  }
+
   build() {
     Column() {
 
@@ -48,7 +63,7 @@ struct  PlayerDetail {
                 .height('40%')
                 .width(CommonConstants.FULL_WIDTH)
               Row(){
-                Image($r("app.media.t6"))
+                Image($r(this.Player.teamImageUrl))
                   .width(30)
                   .height(30)
                   .autoResize(true)
@@ -100,7 +115,16 @@ struct  PlayerDetail {
           PlayerData({Player : this.Player})
         }.tabBar("数据")
         TabContent() {
-          PlayerRadarChart({Player : this.Player})
+          Stack() {
+            PlayerRadarChart({ Player: this.Player })
+            PlayerRate({
+              Player: this.Player,
+              onRated: (): void => this.refreshPlayer() // 传入刷新回调
+            })
+              .position({x:'82%',y:'64.5%'})
+          }
+          .width('100%')
+          .height('100%')
         }.tabBar("能力图")
       }.scrollable(false)
 

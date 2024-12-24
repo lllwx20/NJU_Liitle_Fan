@@ -24,7 +24,6 @@ import {
   Highlight,
 } from '@ohos/mpchart';
 import Logger from '../utils/Logger';
-
 function hexToRgb(hex: string): number {
   hex = hex.replace(/^#/, '');
   const bigint = parseInt(hex, 16);
@@ -36,10 +35,15 @@ function hexToRgb(hex: string): number {
 
 @Component
 export default struct PlayerRadarChart {
-  @Prop Player: Player;
+  @Prop @Watch("onPlayerChanged")Player: Player;
   @State private isValueSelected: boolean = false;
   @State private selectedValue: number = 0;
   @State private selectedIndex: number = -1;
+
+  onPlayerChanged() {
+    this.setData();
+    this.model.animateXY(1500, 1500);
+  }
 
   // 颜色定义
   private PRIMARY_BLUE: number = hexToRgb('#2169A5');
@@ -67,11 +71,19 @@ export default struct PlayerRadarChart {
   @Builder
   build() {
     Stack() {
+      Text('评价数: ' + this.Player.rateNum)
+        .fontSize(15)
+        .fontColor(Color.Grey)
+        .width('40%')
+        .height('5%')
+        .position({ x: '8%', y: '3%' })
+        .zIndex(99)
       RadarChart({ model: this.model })
         .width('120%')
         .height('100%')
         .backgroundColor(Color.White)
         .padding({bottom : 200, left : 23, right : 10})
+
 
       if (this.isValueSelected) {
         Text(`${this.getAttributeLabel(this.selectedIndex)}: ${this.selectedValue.toFixed(1)}`)
@@ -117,7 +129,7 @@ export default struct PlayerRadarChart {
     this.configureXAxis();
     this.configureYAxis();
     this.setData();
-    this.model.animateXY(2000, 2000);
+    this.model.animateXY(1500, 1500);
   }
 
   private configureLegend(): void {
@@ -174,12 +186,12 @@ export default struct PlayerRadarChart {
     let entries: JArrayList<RadarEntry> = new JArrayList<RadarEntry>();
 
     const attributes = [
-      (Math.random() * 80 + 20),  // 射门
-      (Math.random() * 80 + 20),  // 传球
-      (Math.random() * 80 + 20),  // 盘带
-      (Math.random() * 80 + 20),  // 防守
-      (Math.random() * 80 + 20),  // 身体对抗
-      (Math.random() * 80 + 20)   // 战术意识(新增)
+      (this.Player.shooting),  // 射门
+      (this.Player.passing),  // 传球
+      (this.Player.dribbling),  // 盘带
+      (this.Player.defense),  // 防守
+      (this.Player.physical),  // 身体对抗
+      (this.Player.tacticalAwareness)   // 战术意识(新增)
     ];
 
     attributes.forEach(val => {

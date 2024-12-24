@@ -22,7 +22,7 @@ export default struct PlayerItem {
           .width(70)
 
         if(this.data === -1){
-          Image($r("app.media.t6"))
+          Image($r(this.PlayerItem.teamImageUrl))
             .width(40)
             .height(40)
             .autoResize(true)

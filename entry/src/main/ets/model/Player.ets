@@ -5,6 +5,7 @@ export class Player {
   playerGoals: number;
   playerPosition: string;
   playerImageUrl: string;
+  teamImageUrl: string;
   team: string;
   playerAge: number;
   assist: number;
@@ -24,7 +25,13 @@ export class Player {
   playedGame: number;
   playedTime: number;
   starterGame: number;
-
+  shooting:number;
+  passing:number;
+  defense:number;
+  physical:number;
+  tacticalAwareness:number;
+  dribbling:number;
+  rateNum:number;
   constructor(
     id: number = 0,
     number : number = 0,
@@ -33,6 +40,7 @@ export class Player {
     playerPosition: string = "",
     playerImageUrl: string = "",
     team: string = "",
+    teamImageUrl: string = "",
     playerAge: number = 0,
     assist: number = 0,
     shot: number = 0,
@@ -51,6 +59,13 @@ export class Player {
     playedGame: number= 0,
     playedTime: number= 0,
     starterGame: number= 0,
+  dribbling: number= 0,
+  shooting:number= 0,
+  passing:number= 0,
+  defense:number= 0,
+  physical:number= 0,
+  tacticalAwareness:number= 0,
+  rateNum:number= 0,
   ) {
     this.id = id;
     this.number = number;
@@ -59,6 +74,7 @@ export class Player {
     this.playerPosition = playerPosition;
     this.playerImageUrl = playerImageUrl;
     this.team = team;
+    this.teamImageUrl = teamImageUrl;
     this.playerAge = playerAge;
     this.assist = assist;
     this.shot = shot;
@@ -77,6 +93,13 @@ export class Player {
     this.playedGame = playedGame
     this.playedTime = playedTime
     this.starterGame = starterGame
+    this.shooting = shooting
+    this.passing = passing
+    this.defense = defense
+    this.physical = physical
+    this.tacticalAwareness = tacticalAwareness
+    this.dribbling = dribbling
+    this.rateNum = rateNum
   }
 }
 
@@ -89,4 +112,14 @@ export class ClassifyModel {
     this.classifyId = classifyId;
     this.classifyName = classifyName;
   }
+}
+
+export class RatePlayerParams {
+  id?: number;
+  shooting?: number;
+  passing?: number;
+  defense?: number;
+  physical?: number;
+  tacticalAwareness?: number;
+  dribbling?:number;
 }
