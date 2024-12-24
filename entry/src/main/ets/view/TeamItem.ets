@@ -1,19 +1,11 @@
 import { router } from "@kit.ArkUI";
-
+import { Team } from "../model/Team";
 
 
 @Component
 export struct TeamItem {
-  @Prop tid: number;
-  @Prop name: string;
-  @Prop point: number;
+  @Prop team : Team
   @Prop index: number;
-  @Prop games: number;
-  @Prop win: number;
-  @Prop draw: number;
-  @Prop lose: number;
-  @Prop score: number;
-  @Prop loss: number;
   private color: string = this.getColor()
 
   getColor(): string {
@@ -30,24 +22,28 @@ export struct TeamItem {
         .margin({ left: 10 })
         .width(30)
         .textAlign(TextAlign.Center)
-        .fontSize(20)
-      Image($r('app.media.t1'))
-        .width(20)
-        .height(20)
+        .fontSize(18)
+      Image($r(this.team.teamImageUrl))
+        .width(18)
+        .height(18)
         .autoResize(true)
         .margin({ left: 10 })
-      Text(this.name)
+      Text(this.team.teamName)
         .margin({ left: 5 })
-        .fontSize(20)
-      Text(this.games.toString())
-        .margin({ left: 35 })
-        .fontSize(20)
-      Text(this.win.toString() + "/" + this.draw.toString() + "/" + this.lose.toString())
-        .margin({ left: 35 })
-        .fontSize(20)
-      Text(this.score.toString() + "/" + this.loss.toString())
-        .margin({ left: 35 })
-        .fontSize(20)
+        .fontSize(18)
+        .width(50)
+      Text(this.team.teamPlayed.toString())
+        .fontSize(18)
+        .width(60)
+        .textAlign(TextAlign.Center)
+      Text(this.team.teamWin.toString() + "/" + this.team.teamDraw.toString() + "/" + this.team.teamLose.toString())
+        .width(75)
+        .textAlign(TextAlign.Center)
+        .fontSize(18)
+      Text(this.team.teamGoals.toString() + "/" + this.team.teamLoss.toString())
+        .width(75)
+        .textAlign(TextAlign.Center)
+        .fontSize(18)
 
       if (this.index === 0) {
         Column() {
@@ -57,21 +53,19 @@ export struct TeamItem {
             .height(10)
             .backgroundColor('#98F5F9')
             .textAlign(TextAlign.Center)
-            .margin({ top: 0, left: 35 })
-          Text(this.point.toString())
-            .margin({ left: 35 })
-            .fontSize(20)
-            .width(30)
+            .margin({ top: 0})
+          Text(this.team.teamPoints.toString())
+            .fontSize(18)
+            .width(50)
             .textAlign(TextAlign.Center)
             .height(30)
         }.height(50)
       } else {
-        Text(this.point.toString())
-          .margin({ left: 40 })
-          .fontSize(20)
-          .width(30)
+        Text(this.team.teamPoints.toString())
+          .fontSize(18)
+          .width(50)
           .textAlign(TextAlign.Center)
-          .fontSize(20)
+          .fontSize(18)
       }
 
     }
@@ -82,7 +76,7 @@ export struct TeamItem {
     .onClick(() => {
       router.pushUrl({
         url: 'pages/TeamDetail',
-        params: {tid : this.tid}
+        params: {tid : this.team.id, index : this.index}
       })
     })
   }

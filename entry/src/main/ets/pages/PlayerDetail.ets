@@ -48,7 +48,7 @@ struct  PlayerDetail {
                 .height('40%')
                 .width(CommonConstants.FULL_WIDTH)
               Row(){
-                Image($r('app.media.t1'))
+                Image($r("app.media.t6"))
                   .width(30)
                   .height(30)
                   .autoResize(true)

@@ -1,14 +1,13 @@
 import CommonConstants from '../constants/CommonConstants';
-import { Player } from '../model/Player';
 import ResponseResult from '../model/ResponseResult';
+import { Team } from '../model/Team';
 import { httpRequestGet } from '../utils/HttpUtil';
 import Logger from '../utils/Logger';
 
-class PlayerViewModel {
-
-  getPlayerList(): Promise<Player[]> {
+class TeamViewModel {
+  getTeamList() : Promise<Team[]> {
     return new Promise(async (resolve: Function, reject: Function) => {
-      let url = `${CommonConstants.SERVER}${CommonConstants.GET_PLAYER_LIST}`;
+      let url = `${CommonConstants.SERVER}${CommonConstants.GET_TEAM_LIST}`;
       httpRequestGet(url).then((data: ResponseResult) => {
         if (data.code === CommonConstants.SERVER_CODE_SUCCESS) {
           Logger.info(url + ' getList', JSON.stringify(data));
@@ -23,10 +22,9 @@ class PlayerViewModel {
       });
     });
   }
-
-  getPlayerByTeam(name : string): Promise<Player[]> {
+  getTeam(id : number) : Promise<Team> {
     return new Promise(async (resolve: Function, reject: Function) => {
-      let url = `${CommonConstants.SERVER}${CommonConstants.GET_PLAYER_BY_TEAM}` + name;
+      let url = `${CommonConstants.SERVER}${CommonConstants.GET_TEAM}${id}`;
       httpRequestGet(url).then((data: ResponseResult) => {
         if (data.code === CommonConstants.SERVER_CODE_SUCCESS) {
           Logger.info(url + ' getList', JSON.stringify(data));
@@ -43,6 +41,6 @@ class PlayerViewModel {
   }
 }
 
-let playerViewModel = new PlayerViewModel();
+let teamViewModel = new TeamViewModel();
 
-export default playerViewModel as PlayerViewModel;
+export default teamViewModel as TeamViewModel;

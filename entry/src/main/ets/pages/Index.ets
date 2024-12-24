@@ -1,5 +1,7 @@
 import { Team } from '../model/Team';
+import Logger from '../utils/Logger';
 import { TeamItem } from '../view/TeamItem';
+import TeamViewModel from '../viewmodel/TeamViewModel';
 import PlayerPage from './PlayerPage';
 
 @Entry
@@ -11,21 +13,9 @@ struct Index {
   private teams : Team[] = [];
   myScroller : Scroller = new Scroller()
   @State yOffset : number = 0
-  aboutToAppear(): void {
-
-      for(let i = 0; i < 20; i++) {
-        this.teams.push({
-          id: 0,
-          name: "软院",
-          point: 0,
-          games : 0,
-          win : 0,
-          draw : 0,
-          lose : 0,
-          score : 0,
-          loss : 0
-        })
-      }
+  async aboutToAppear() {
+     this.teams = await TeamViewModel.getTeamList()
+      Logger.info('Team List:', JSON.stringify(this.teams));
   }
 
   // 自定义导航页签的样式
@@ -57,16 +47,8 @@ struct Index {
               ForEach(this.teams, (team: Team, index: number) => {
                 ListItem() {
                   TeamItem({
-                    tid: team.id,
-                    name: team.name,
-                    point: team.point,
-                    index: index,
-                    games: team.games,
-                    win: team.win,
-                    draw: team.draw,
-                    lose: team.lose,
-                    score: team.score,
-                    loss: team.loss
+                    team : team,
+                    index: index + 1,
                   })
                 }
               })
@@ -81,23 +63,29 @@ struct Index {
 
           Row() {
             Text("排名")
-              .margin({ left: 12 })
-              .fontSize(15)
+              .margin({ left: 8 })
+              .fontSize(18)
+              .width(44)
             Text("球队")
-              .margin({ left: 30 })
-              .fontSize(15)
+              .width(70)
+              .textAlign(TextAlign.Center)
+              .fontSize(18)
             Text("场次")
-              .margin({ left: 39 })
-              .fontSize(15)
+              .width(60)
+              .textAlign(TextAlign.Center)
+              .fontSize(18)
             Text("胜/平/负")
-              .margin({ left: 23 })
-              .fontSize(15)
+              .width(80)
+              .textAlign(TextAlign.Center)
+              .fontSize(18)
             Text("进/失球")
-              .margin({ left: 23 })
-              .fontSize(15)
+              .width(70)
+              .textAlign(TextAlign.Center)
+              .fontSize(18)
             Text("积分")
-              .margin({ left: 26 })
-              .fontSize(15)
+              .width(50)
+              .textAlign(TextAlign.Center)
+              .fontSize(18)
           }
           .position({
             x: 0,
@@ -127,6 +115,6 @@ struct Index {
         PlayerPage()
           .padding({bottom : 78})
       }.tabBar(this.TabBuilder("球员", 3, $r('app.media.PlayerSelected'), $r('app.media.PlayerList')))
-    }
+    }.scrollable(false)
   }
 }
