@@ -6,6 +6,10 @@ export default class CommonConstants {
 
   static readonly SERVER: string = 'http://10.4.42.17:8080';
 
+  static readonly LOGIN: string = '/api/users/login';
+
+  static readonly REGISTER: string = '/api/users/register';
+
   static readonly GET_PLAYER_LIST: string = '/api/players/getPlayerList';
 
   static readonly GET_PLAYER_BY_TEAM: string = '/api/players/getPlayerByTeam/';
