@@ -2,6 +2,7 @@ import { Team } from '../model/Team';
 import Logger from '../utils/Logger';
 import { TeamItem } from '../view/TeamItem';
 import TeamViewModel from '../viewmodel/TeamViewModel';
+import FirstPage from './FirstPage';
 import PlayerPage from './PlayerPage';
 
 @Entry
@@ -38,8 +39,12 @@ struct Index {
   build() {
     Tabs({barPosition: BarPosition.End , controller : this.controller}) {
       TabContent() {
-
+        FirstPage()
+          .padding({bottom : 78})
       }.tabBar(this.TabBuilder("首页", 0, $r('app.media.FirstPageSelected'), $r('app.media.FirstPageList')))
+      TabContent() {
+        //
+      }.tabBar(this.TabBuilder("比赛", 1, $r('app.media.GameSelected'), $r('app.media.GameList')))
       TabContent() {
         Stack() {
           Scroll(this.myScroller) {
@@ -107,14 +112,11 @@ struct Index {
               })
           }
         }
-      }.tabBar(this.TabBuilder("积分榜", 1, $r('app.media.RatingSelected'), $r('app.media.RatingList')))
-      TabContent() {
-
-      }.tabBar(this.TabBuilder("比赛", 2, $r('app.media.GameSelected'), $r('app.media.GameList')))
+      }.tabBar(this.TabBuilder("积分榜", 2, $r('app.media.RatingSelected'), $r('app.media.RatingList')))
       TabContent() {
         PlayerPage()
           .padding({bottom : 78})
-      }.tabBar(this.TabBuilder("球员", 3, $r('app.media.PlayerSelected'), $r('app.media.PlayerList')))
+      }.tabBar(this.TabBuilder("球员榜", 3, $r('app.media.PlayerSelected'), $r('app.media.PlayerList')))
     }.scrollable(false)
   }
 }

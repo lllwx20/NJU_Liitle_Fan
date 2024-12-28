@@ -65,7 +65,15 @@ export default struct PlayerRate {
 @CustomDialog
 struct RatingDialog {
   @Link ratePlayer: RatePlayerParams;
-  controller: CustomDialogController;
+  controller: CustomDialogController = new CustomDialogController({ // 提供默认值
+    builder: RatingDialog({
+      ratePlayer: $ratePlayer,
+      confirm: (): void => this.confirm(),
+      controller: undefined // 这里可以在构造时传递 controller
+    }),
+    alignment: DialogAlignment.Bottom,
+    offset: { dx: 0, dy: -20 }
+  });
   confirm: () => void = () => {}; // 提供默认实现
 
   build() {
