@@ -11,7 +11,7 @@ struct RegisterPage {
   @State password: string = '';
   @State confirmPassword: string = '';
   @State name: string = '';
-
+  //加一个变量记录角色身份
 
   async onRequest() {
     if (this.password !== this.confirmPassword) {
@@ -30,6 +30,7 @@ struct RegisterPage {
         name: this.name,
         phone: this.phone,
         password: this.password
+        //role: this.role
       })
     });
 
@@ -45,7 +46,7 @@ struct RegisterPage {
       }
 
       if (result.code === "000") {
-        router.pushUrl({ url: 'pages/Index' });
+        router.pushUrl({ url: 'pages/Login' });
       } else {
         this.registerError = result.msg as string || '注册失败，请稍后再试';
       }
@@ -57,7 +58,7 @@ struct RegisterPage {
 
   build() {
     Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceAround }) {
-      Text('注册智慧管家系统')
+      Text('注册')
         .fontSize(24)
         .fontColor(Color.Blue)
         .fontWeight(FontWeight.Bold);
@@ -85,6 +86,8 @@ struct RegisterPage {
             this.confirmPassword = value;
           });
 
+        //选择角色身份的逻辑是什么样的？
+
         Button('注册')
           .width('95%')
           .margin({ top: 10 })
@@ -98,7 +101,7 @@ struct RegisterPage {
           .backgroundColor(Color.Gray)
           .margin({ top: 10 })
           .onClick(() => {
-            router.pushUrl({ url: 'pages/Index' });
+            router.pushUrl({ url: 'pages/Login' });
           });
 
         if (this.registerError) {
@@ -112,6 +115,5 @@ struct RegisterPage {
     }
     .width('100%')
     .height('100%')
-    .backgroundImageSize(ImageSize.Cover);
   }
 }

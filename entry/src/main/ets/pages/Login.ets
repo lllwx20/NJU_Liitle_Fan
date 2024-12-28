@@ -17,7 +17,7 @@ struct Index {
     const httpRequest = http.createHttp();
 
     // 通过 URL 查询参数发送请求
-    const url = `${CommonConstants.SERVER}${CommonConstants.GET_PLAYER_LIST}${encodeURIComponent(this.phone)}&password=${encodeURIComponent(this.password)}`;
+    const url = `${CommonConstants.SERVER}${CommonConstants.LOGIN}${encodeURIComponent(this.phone)}&password=${encodeURIComponent(this.password)}`;
 
     console.log(url);
     const promise = httpRequest.request(url, {
@@ -64,7 +64,7 @@ struct Index {
       .width("100%")
       // 设置Row组件的高度为状态栏的高度，可避免界面内容与状态栏内容重叠
       .height(this.topHeight)
-      Text('登陆太空站内部检测系统')
+      Text('登录')
         .fontSize(24)
         .fontColor(Color.Blue)
         .fontWeight(FontWeight.Bold)
@@ -78,7 +78,7 @@ struct Index {
           .onChange((value) => {
             this.password = value
           })
-        Button('登陆')
+        Button('登录')
           .width('95%')
           .margin({ top: 10 })
           .onClick(() => {
@@ -90,7 +90,7 @@ struct Index {
           .margin({ top: 10 })
           .onClick(() => {
             router.pushUrl({
-              url: 'pages/RegisterPage'
+              url: 'pages/Register'
             })
           })
         if (this.loginError) {
@@ -110,6 +110,5 @@ struct Index {
     }
     .width('100%')
     .height('100%')
-    .backgroundImageSize(ImageSize.Cover)
   }
 }
