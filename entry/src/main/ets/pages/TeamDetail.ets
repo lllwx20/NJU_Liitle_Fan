@@ -151,7 +151,7 @@ struct TeamDetail {
             }
           }
 
-          Image($r("app.media.t6"))
+          Image($r(this.team.teamImageUrl))
             .width(100)
             .height(100)
             .margin({ left: 75 })
@@ -478,7 +478,7 @@ struct TeamDetail {
                   PlayerItem({
                     PlayerItem: item,
                     rank: index + 1,
-                    data: item.playerGoals
+                    data: -1
                   })
                 }
               })

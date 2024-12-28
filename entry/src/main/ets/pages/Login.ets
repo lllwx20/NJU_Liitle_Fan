@@ -2,6 +2,11 @@ import router from '@ohos.router';
 import http from '@ohos.net.http';
 import ResponseResult from '../model/ResponseResult';
 import CommonConstants from '../constants/CommonConstants';
+import UserViewModel from '../viewmodel/UserViewModel';
+import Logger from '../utils/Logger';
+import { Login } from '../utils/PreferenceUtil';
+import { promptAction } from '@kit.ArkUI';
+
 
 @Entry
 @Component
@@ -14,7 +19,7 @@ struct Index {
   @StorageLink("bottomRectHeight") bottomHeight: number = 0
 
   async onLoginRequest() {
-    const httpRequest = http.createHttp();
+    /*const httpRequest = http.createHttp();
 
     // 通过 URL 查询参数发送请求
     const url = `${CommonConstants.SERVER}${CommonConstants.LOGIN}${encodeURIComponent(this.phone)}&password=${encodeURIComponent(this.password)}`;
@@ -52,7 +57,15 @@ struct Index {
     }).catch((err: Error) => {
       console.error('错误信息：' + JSON.stringify(err));
       this.loginError = '网络错误，请稍后再试';
-    });
+    });*/
+    let uid : number = await UserViewModel.Login({phone : this.phone, password : this.password})
+    Logger.info("uid" + uid)
+    Login(uid)
+
+    router.back({url : 'pages/Index', params : {
+      uid : uid
+    }})
+
   }
 
   build() {

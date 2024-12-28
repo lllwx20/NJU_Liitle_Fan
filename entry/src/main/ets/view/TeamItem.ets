@@ -9,7 +9,7 @@ export struct TeamItem {
   private color: string = this.getColor()
 
   getColor(): string {
-    if (this.index < 3 && this.index >= 0) {
+    if (this.index < 4 && this.index > 0) {
       return '#E2EAF4'
     }
     return '#F1F3F5'
@@ -45,7 +45,7 @@ export struct TeamItem {
         .textAlign(TextAlign.Center)
         .fontSize(18)
 
-      if (this.index === 0) {
+      if (this.index === 1) {
         Column() {
           Text("晋级区")
             .fontSize(10)

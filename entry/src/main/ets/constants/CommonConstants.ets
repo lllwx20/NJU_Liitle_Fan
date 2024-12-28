@@ -4,7 +4,7 @@
  */
 export default class CommonConstants {
 
-  static readonly SERVER: string = 'http://10.4.57.154:8080';
+  static readonly SERVER: string = 'http://10.4.41.194:8080';
 
   static readonly LOGIN: string = '/api/users/login';
 
@@ -21,6 +21,8 @@ export default class CommonConstants {
   static readonly RATE_PLAYER: string = '/api/players/ratePlayer';
 
   static readonly GET_PLAYER_BY_ID: string = '/api/players/getPlayerById/';
+
+  static readonly GET_USER: string = '/api/users/';
 
   static readonly SERVER_CODE_SUCCESS: string = '000';
 

@@ -2,6 +2,8 @@ import router from '@ohos.router';
 import http from '@ohos.net.http';
 import ResponseResult from '../model/ResponseResult';
 import CommonConstants from '../constants/CommonConstants';
+import { User } from '../model/User';
+import { promptAction } from '@kit.ArkUI';
 
 @Entry
 @Component
@@ -22,16 +24,18 @@ struct RegisterPage {
     const httpRequest = http.createHttp();
 
     const url = `${CommonConstants.SERVER}${CommonConstants.REGISTER}`;
+    let user : User = new User()
+    user.name = this.name;
+    user.phone = this.phone;
+    user.password = this.password;
+    user.role = "user";
+    user.tid = 0;
+    user.avatar = "app.media.BaseAvatar"
 
     const promise = httpRequest.request(url, {
       method: http.RequestMethod.POST,
       header: { 'Content-Type': 'application/json; charset=utf-8' },
-      extraData: JSON.stringify({
-        name: this.name,
-        phone: this.phone,
-        password: this.password
-        //role: this.role
-      })
+      extraData: user
     });
 
     promise.then((data) => {
@@ -46,8 +50,10 @@ struct RegisterPage {
       }
 
       if (result.code === "000") {
+        promptAction.showToast({message : "注册成功!"})
         router.pushUrl({ url: 'pages/Login' });
       } else {
+        promptAction.showToast({message : "该手机号已被注册!"})
         this.registerError = result.msg as string || '注册失败，请稍后再试';
       }
     }).catch((err :Error) => {
