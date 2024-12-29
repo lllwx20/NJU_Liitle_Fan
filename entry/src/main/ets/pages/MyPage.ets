@@ -1,9 +1,10 @@
 import { promptAction, router} from "@kit.ArkUI"
 import { Team } from "../model/Team"
 import { User } from "../model/User"
-import { getUid, Logged, Login } from "../utils/PreferenceUtil"
+import { exit, getUid, Logged, Login } from "../utils/PreferenceUtil"
 import TeamViewModel from "../viewmodel/TeamViewModel"
 import UserViewModel from "../viewmodel/UserViewModel"
+import { ResizeDirection } from "@kit.TestKit"
 
 
 @Component
@@ -49,9 +50,53 @@ export default struct MyPage {
     Column() {
       Flex({ justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
         Column({ space: 10 }) {
+          Row(){
+            Column(){
+
+            }.width('85%')
+            if(this.login) {
+              Image($r('app.media.exit'))
+                .width(30)
+                .height(30)
+                .onClick(()=> {
+                  AlertDialog.show({
+                    title: '退出账号',
+                    message: `是否退出当前账号？`,
+                    alignment: DialogAlignment.Center,
+                    primaryButton:{
+                      value: '确认',
+                      fontColor: Color.White,
+                      backgroundColor: Color.Blue,
+                      action: ()=> {
+                        this.login = false
+                        this.uid = 0
+                        this.avatar = 'app.media.BaseAvatar'
+                        exit()
+                        promptAction.showToast({ message: '退出成功' });
+
+                      }
+                    },
+                    secondaryButton:{
+                      value: '取消',
+                      fontColor: Color.Gray,
+                      backgroundColor: Color.White,
+                      action: ()=> {
+
+                      }
+                    }
+                  })
+
+                })
+
+            }
+          }
+          .width('100%')
+          .height(40)
           Image($r(this.avatar))
             .width(80)
             .height(80)
+            .clipShape(new Circle({ width: 80, height: 80 }))
+            .backgroundColor(Color.White)
           if(!this.login) {
             Text('登录 / 注册')
               .fontSize(20)
@@ -73,7 +118,9 @@ export default struct MyPage {
         })
       }
       .width('100%')
-      .height(150)
+      .height(200)
+
+
 
       Row() {
         Text("我的主队")

@@ -71,16 +71,27 @@ struct Index {
   build() {
 
     Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceAround }) {
+    Row() {
+      Image($r('app.media.BackBlack'))
+        .width(40)
+        .height(40)
+        .onClick(() => {
+          router.back()
+        })
+        .alignSelf(ItemAlign.Start)
+        .margin({ left: 20, top: 50 })
+    }.width('100%')
       // 在界面顶部放置一个Row组件，用于占位
-      Row() {
+      Column() {
+        Image($r('app.media.NJUFA'))
+          .width(200)
+          .height(200)
+
+        // 设置Row组件的高度为状态栏的高度，可避免界面内容与状态栏内容重叠
+        Text('登录')
+          .fontSize(24)
+          .fontWeight(FontWeight.Bold)
       }
-      .width("100%")
-      // 设置Row组件的高度为状态栏的高度，可避免界面内容与状态栏内容重叠
-      .height(this.topHeight)
-      Text('登录')
-        .fontSize(24)
-        .fontColor(Color.Blue)
-        .fontWeight(FontWeight.Bold)
       Column({ space: 8 }) {
         TextInput({ placeholder: '手机号：' })
           .onChange((value) => {
