@@ -27,10 +27,16 @@ struct Index {
 
   @State uid: number = 0;
 
+  @State change : boolean = false;
+
   onPageShow(): void {
     if (Logged()) {
+      this.change = !this.change
       this.uid = parseInt(getUid())
+    } else {
+      this.uid = 0
     }
+    Logger.info('new uid = ' + this.uid);
   }
 
   // 自定义导航页签的样式
@@ -163,6 +169,8 @@ struct Index {
 
         if (this.uid == 0) {
           MyPage({ uid: 0 })
+        } else if(this.uid != 0 && this.change){
+          MyPage({ uid: this.uid })
         } else {
           MyPage({ uid: this.uid })
         }

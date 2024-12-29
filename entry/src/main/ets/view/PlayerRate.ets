@@ -105,6 +105,7 @@ struct RatingDialog {
           .onClick(() => {
             this.controller.close();
           })
+          .backgroundColor(Color.Gray)
         Button('确定')
           .margin(10)
           .onClick(() => {
