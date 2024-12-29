@@ -4,9 +4,7 @@ import { TeamItem } from '../view/TeamItem';
 import TeamViewModel from '../viewmodel/TeamViewModel';
 import FirstPage from './FirstPage';
 import PlayerPage from './PlayerPage';
-import { ItemInfo } from '@kit.MediaLibraryKit';
 import MyPage from './MyPage';
-import { router } from '@kit.ArkUI';
 import { getUid, Logged } from '../utils/PreferenceUtil';
 
 @Entry
@@ -45,7 +43,6 @@ struct Index {
         .fontColor(this.currentIndex === targetIndex ? '#28bff1' : '#8a8a8a')
     }
     .width('100%')
-    .height(50)
     .justifyContent(FlexAlign.Center)
     .onClick(() => {
       if (this.currentIndex - targetIndex > 1 || this.currentIndex - targetIndex < -1) {
@@ -64,7 +61,6 @@ struct Index {
     Tabs({ barPosition: BarPosition.End, controller: this.controller }) {
       TabContent() {
         FirstPage()
-          .padding({ bottom: 78 })
       }.tabBar(this.TabBuilder("首页", 0, $r('app.media.FirstPageSelected'), $r('app.media.FirstPageList')))
 
       TabContent() {
