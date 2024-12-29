@@ -13,6 +13,15 @@ struct RegisterPage {
   @State password: string = '';
   @State confirmPassword: string = '';
   @State name: string = '';
+  @State man : string = 'app.media.Man'
+  @State manSize : number = 75
+  @State manX : number = 75
+  @State manY : number = 12.5
+  @State woman :string = 'app.media.Woman'
+  @State womanSize : number = 75
+  @State womanX : number = 50
+  @State womanY : number = 10
+  @State choose : string = ""
   //加一个变量记录角色身份
 
   async onRequest() {
@@ -30,7 +39,8 @@ struct RegisterPage {
     user.password = this.password;
     user.role = "user";
     user.tid = 0;
-    user.avatar = "app.media.BaseAvatar"
+    user.avatar = this.choose
+    user.games = []
 
     const promise = httpRequest.request(url, {
       method: http.RequestMethod.POST,
@@ -68,6 +78,56 @@ struct RegisterPage {
         .fontSize(24)
         .fontColor(Color.Blue)
         .fontWeight(FontWeight.Bold);
+
+      Row() {
+
+        Flex({alignItems: ItemAlign.Center}){
+          Image($r(this.man))
+            .size({width : this.manSize, height : this.manSize})
+            .position({x : this.manX, y : this.manY})
+            .onClick(() => {
+              animateTo({
+                duration: 400,
+              }, () => {
+                this.manX = 62.5
+                this.manY = 0
+                this.womanX = 50
+                this.womanY = 12.5
+                this.manSize = 100;
+                this.womanSize = 75
+              });
+              this.choose = 'app.media.Man'
+            })
+            .alignSelf(ItemAlign.Center)
+
+        }
+        .width('50%')
+
+
+        Flex({alignItems: ItemAlign.Center}) {
+          Image($r(this.woman))
+            .size({width : this.womanSize, height : this.womanSize})
+            .position({x : this.womanX, y : this.womanY})
+            .onClick(() => {
+              animateTo({
+                duration: 400,
+              }, () => {
+                this.manX = 75
+                this.manY = 12.5
+                this.womanX = 37.5
+                this.womanY = 0
+                this.manSize = 75;
+                this.womanSize = 100
+              });
+              this.choose = 'app.media.Woman'
+            })
+
+
+        }.width('50%')
+
+
+      }
+      .height(150)
 
       Column({ space: 8 }) {
         TextInput({ placeholder: '用户名：' })

@@ -12,4 +12,6 @@ export class User {
   role : string = "";
 
   tid : number = 0;
+
+  games : number[] = []
 }

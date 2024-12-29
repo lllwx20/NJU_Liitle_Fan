@@ -24,6 +24,8 @@ export default class CommonConstants {
 
   static readonly GET_USER: string = '/api/users/';
 
+  static readonly SET_MAIN_TEAM: string = '/api/users/setMainTeam/';
+
   static readonly SERVER_CODE_SUCCESS: string = '000';
 
   static readonly FULL_WIDTH: string = '100%';

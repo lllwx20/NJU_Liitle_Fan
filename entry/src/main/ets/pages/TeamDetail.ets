@@ -481,6 +481,11 @@ struct TeamDetail {
                     data: -1
                   })
                 }
+                .width('95%')
+                .margin({
+                  left: 11
+                })
+                .borderRadius(15)
               })
             }
             .width('100%')

@@ -1,4 +1,4 @@
-import { router, screenshot, window } from "@kit.ArkUI"
+import { promptAction, router} from "@kit.ArkUI"
 import { Team } from "../model/Team"
 import { User } from "../model/User"
 import { getUid, Logged, Login } from "../utils/PreferenceUtil"
@@ -15,9 +15,13 @@ export default struct MyPage {
   @State tid : number = 0
   @State index : number = 1
   @State userName: string = "aaa"
+  @State avatar :string = 'app.media.BaseAvatar'
   @State mainTeam : string = ""
   @State TeamImageUrl : string  = ""
   @State imageSize : number = 50
+  @State teams : Team[] = []
+  @State teamItems : Array<SelectOption> = []
+  @State tidArray : number[] = []
 
   async aboutToAppear(): Promise<void> {
 
@@ -25,28 +29,19 @@ export default struct MyPage {
       this.login = true
       let user : User = await UserViewModel.getUser(this.uid)
       this.userName = user.name;
+      this.avatar = user.avatar
       this.tid = user.tid;
     }
     if(this.tid != 0) {
       let team : Team = await TeamViewModel.getTeam(this.tid)
       this.mainTeam = team.teamName
       this.TeamImageUrl = team.teamImageUrl
-    }
-  }
-
-  async aboutToDisappear(): Promise<void> {
-
-    this.login = Logged()
-    if(this.login) {
-      let user : User = await UserViewModel.getUser(parseInt(getUid()))
-      this.uid = user.id
-      this.userName = user.name;
-      this.tid = user.tid;
-    }
-    if(this.tid != 0) {
-      let team : Team = await TeamViewModel.getTeam(this.tid)
-      this.mainTeam = team.teamName
-      this.TeamImageUrl = team.teamImageUrl
+    } else {
+      this.teams = await TeamViewModel.getTeamList()
+      for(let i : number = 0; i < this.teams.length; i++) {
+        this.teamItems.push({value : this.teams[i].teamName, icon : this.teams[i].teamImageUrl})
+        this.tidArray.push(this.teams[i].id)
+      }
     }
   }
 
@@ -54,7 +49,7 @@ export default struct MyPage {
     Column() {
       Flex({ justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
         Column({ space: 10 }) {
-          Image($r('app.media.BaseAvatar'))
+          Image($r(this.avatar))
             .width(80)
             .height(80)
           if(!this.login) {
@@ -87,36 +82,67 @@ export default struct MyPage {
           .textAlign(TextAlign.Center)
           .width('50%')
         if(this.login) {
-          Row() {
-            Text(this.mainTeam)
-              .textAlign(TextAlign.Center)
-              .fontSize(20)
-              .width('25%')
-            Image($r(this.TeamImageUrl))
-              .margin({ left: 20 })
-              .width(this.imageSize)
-              .height(this.imageSize)
-              .onClick(() => {
-                animateTo({
-                  duration: 500,
-                }, () => {
-                  this.imageSize = 65;
-                });
-                animateTo({
-                  duration: 100,
-                  delay : 200
-                }, () => {
-                  this.imageSize = 50;
-                });
-                router.pushUrl({
-                  url: 'pages/TeamDetail',
-                  params: { tid: this.tid, index: this.index }
+          if(this.tid == 0) {
+            Row() {
+              Select(this.teamItems)
+                .value("请选择主队")
+                .selectedOptionFont({ size: 16, weight: 400 })
+                .onSelect((index : number) => {
+                  AlertDialog.show({
+
+                    title: '确认您选择的主队',
+                    message: `是否选择${this.teamItems[index].value}为您的主队？`,
+                    alignment: DialogAlignment.Center,
+                    primaryButton:{
+                      value: '确认',
+                      fontColor: Color.White,
+                      backgroundColor: Color.Blue,
+                      action: async ()=> {
+                        let ret = await UserViewModel.setMainTeam(this.uid, this.tidArray[index])
+                        if(ret) {
+                          this.tid = this.tidArray[index]
+                          let team : Team = await TeamViewModel.getTeam(this.tid)
+                          this.mainTeam = team.teamName
+                          this.TeamImageUrl = team.teamImageUrl
+                          promptAction.showToast({ message: '选择成功' });
+                        } else {
+                          promptAction.showToast({ message: '选择失败' });
+                        }
+                      }
+                    },
+                    secondaryButton:{
+                      value: '取消',
+                      fontColor: Color.Gray,
+                      backgroundColor: Color.White,
+                      action: ()=> {
+
+                      }
+                    },
+                    cancel: ()=> {
+                      promptAction.showToast({ message: `已取消` });
+                    }
+                  })
                 })
-              })
-
-
+            }
+          } else {
+            Row() {
+              Text(this.mainTeam)
+                .textAlign(TextAlign.Center)
+                .fontSize(20)
+                .width('25%')
+              Image($r(this.TeamImageUrl))
+                .margin({ left: 20 })
+                .width(this.imageSize)
+                .height(this.imageSize)
+                .onClick(() => {
+                  router.pushUrl({
+                    url: 'pages/TeamDetail',
+                    params: { tid: this.tid, index: this.index }
+                  })
+                })
+            }
+            .width('50%')
           }
-          .width('50%')
         } else {
           Text("请登录查看")
             .fontSize(20)
@@ -132,7 +158,7 @@ export default struct MyPage {
       .borderRadius(15)
 
       Column() {
-        Text("我订阅的比赛")
+        Text("我的订阅")
           .fontSize(20)
           .height(50)
           .fontWeight(FontWeight.Bold)
