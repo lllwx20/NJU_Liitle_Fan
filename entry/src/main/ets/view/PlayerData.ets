@@ -30,7 +30,7 @@ export default struct PlayerData {
 
               Column() {
                 Text('上场时间').fontSize(20).fontColor(Color.Grey).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
-                Text(this.Player.playedTime + '').fontSize(20).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
+                Text(this.Player.starterGame * 80 + (this.Player.playedGame - this.Player.starterGame) * 20 + '').fontSize(20).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
               }
               .height('50%')
 

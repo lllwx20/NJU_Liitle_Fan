@@ -34,6 +34,12 @@ export default struct PlayerPage {
   private scroller: Scroller = new Scroller();
   private controller: SearchController = new SearchController()
 
+  private PlayersScroller: Scroller = new Scroller()
+  @State imageSize : number = 0
+  @State imageX : number = 200
+  @State imageY : number = 55
+  @State yOffset: number = 0
+
   async aboutToAppear() {
     this.originPlayerList = await PlayerViewModel.getPlayerList();
     this.playerList = this.originPlayerList;
@@ -165,7 +171,6 @@ export default struct PlayerPage {
           .margin({top : 20})
           .backgroundColor('#F1F3F5')
           .scrollBar(BarState.Off)
-
           Column() {
             Row(){
               Row(){
@@ -177,6 +182,30 @@ export default struct PlayerPage {
                   .textAlign(TextAlign.Start)
               }.margin({ left: 10 })
               Row(){
+                if (this.yOffset > 200) {
+                  Image($r("app.media.ToTop"))
+                    .width(this.imageSize)
+                    .height(this.imageSize)
+                    .clipShape(new Circle({ width: this.imageSize, height: this.imageSize }))
+                    .onAppear(() => {
+                      animateTo({
+                        duration: 500,
+                      }, () => {
+                        this.imageX = 175
+                        this.imageY = 30
+                        this.imageSize = 40;
+                      });
+
+                    })
+                    .onClick(() => {
+                      this.PlayersScroller.scrollEdge(Edge.Top)
+                      this.imageSize = 0;
+                      this.imageX = 200
+                      this.imageY = 55
+                    })
+                }
+              }.margin({left: this.currentClassify === 0  ? 0 : 10})
+              Row(){
                 if(this.currentClassify !== 0 ){
                   Image($r('app.media.dataIcon'))
                     .width(19)
@@ -186,7 +215,7 @@ export default struct PlayerPage {
                     .textAlign(TextAlign.Center)
                     .fontSize(16)
                 }
-              }.padding({left: 64 })
+              }.padding({left: this.imageSize === 0 ? 45 : 0 })
 
               Row(){
                 Image(this.currentClassify === 0 ? $r('app.media.TeamIcon') : $r('app.media.RankIcon'))
@@ -196,9 +225,6 @@ export default struct PlayerPage {
                 Text(this.currentClassify === 0 ? '球队' : '排名')
                 .textAlign(TextAlign.End)
               }.padding({right: 20 })
-
-
-
             }
             .width(CommonConstants.FULL_WIDTH)
             .justifyContent(FlexAlign.SpaceBetween)
@@ -210,7 +236,7 @@ export default struct PlayerPage {
               .opacity(0.5)
               .margin({top : 4,bottom : 6})
 
-            List({ space: 10 }) {
+            List({ space: 10 ,scroller : this.PlayersScroller}) {
               ForEach(this.playerList, (item: Player, index: number) => {
                 ListItem() {
                   PlayerItem({
@@ -222,6 +248,10 @@ export default struct PlayerPage {
               }, (item: Player) => `${item.id}-${this.currentClassify}-${this.changeValue}`) // 添加当前分类作为标识的一部分
             }
             .scrollBar(BarState.Off)
+            .onWillScroll(() => {
+              this.yOffset = this.PlayersScroller.currentOffset().yOffset
+              Logger.info('y:' + this.yOffset)
+            })
             .padding({ left: 10, right: 10 })
             .animation({
               duration: 300,
