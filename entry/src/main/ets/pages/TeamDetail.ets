@@ -111,12 +111,11 @@ struct TeamDetail {
           Column() {
             Image($r('app.media.GoBack'))
               .width(20)
-              .height(20)
               .onClick(() => {
                 router.back()
               })
               .alignSelf(ItemAlign.Start)
-              .margin({ top: 0 })
+              .margin({ left : 6 })
             Text(this.name)
               .fontSize(30)
               .fontColor('white')

@@ -24,7 +24,7 @@ export struct GameDetail {
               Image($r('app.media.GoBack'))
                 .width(20)
                 .height(20)
-                .margin({ top: 15 })
+                .margin({ left : 6 ,top : 5 })
                 .onClick(() => {
                   router.back();
                 })
