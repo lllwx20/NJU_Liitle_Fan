@@ -1,6 +1,8 @@
+import { Player } from "./Player"
+
 export class Team{
   id : number = 0
-  players : number[] = []
+  players : Player[] = []
   teamName : string = ""
   teamType : string = ""
 
@@ -38,7 +40,11 @@ export class Team{
   teamSteal : number = 0;
   teamFoul : number = 0;
   teamYellow : number = 0;
+  /*
+
+  * TODO:把这个注释了，不然测试的team不能修改
   Team(){
 
   }
+  * */
 }

@@ -4,6 +4,7 @@
     "pages/TeamDetail",
     "pages/PlayerDetail",
     "pages/Login",
-    "pages/Register"
+    "pages/Register",
+    "pages/GameDetail"
   ]
 }
