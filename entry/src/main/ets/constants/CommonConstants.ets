@@ -30,6 +30,8 @@ export default class CommonConstants {
 
   static readonly GET_GAME: string = '/api/games/getGameById/'
 
+  static readonly GET_ALL_GAME: string = '/api/games/getGameList'
+
   static readonly SERVER_CODE_SUCCESS: string = '000';
 
   static readonly FULL_WIDTH: string = '100%';
