@@ -41,6 +41,7 @@ export struct GameDetail {
     this.teamB = await TeamViewModel.getTeam(this.game.team2);
     this.players_A = await PlayerViewModel.getPlayerByTeam(this.teamA.teamName);
     this.players_B = await PlayerViewModel.getPlayerByTeam(this.teamB.teamName);
+    this.game.stats = this.generateStats();
   }
   build() {
     if (this.game.status === '已结束') {
