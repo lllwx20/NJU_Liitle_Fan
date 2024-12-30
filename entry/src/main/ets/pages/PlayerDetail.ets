@@ -31,9 +31,9 @@ struct  PlayerDetail {
       Column() {
         Column(){
           Button({ type: ButtonType.Circle, stateEffect: true }) {
-            Image($r('app.media.back')).width(20).height(20)
+            Image($r('app.media.GoBack')).width(20).height(20)
           }
-          .backgroundImage($r('app.media.background'))
+          .backgroundImage($r('app.media.TeamBackground2'))
           .width(30)
           .height(30)
           .onClick(() => {
@@ -92,7 +92,7 @@ struct  PlayerDetail {
             Text(this.Player.playerPosition)
               .fontSize(20)
               .fontColor(Color.White)
-            Text(this.Player.playerAge+'岁')
+            Text(2024 - parseInt(this.Player.bornYearMonth.substring(0,4))+'岁')
               .fontSize(20)
               .fontColor(Color.White)
           }
@@ -102,7 +102,7 @@ struct  PlayerDetail {
           .height('35%')
         }.width(CommonConstants.FULL_WIDTH)
       }
-      .backgroundImage($r('app.media.background'))
+      .backgroundImage($r('app.media.TeamBackground2'))
       .backgroundImagePosition(Alignment.Center)
       .backgroundImageSize(ImageSize.FILL)
       .width('100%')

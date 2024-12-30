@@ -174,10 +174,10 @@ export default struct PlayerRadarChart {
   private configureYAxis(): void {
     let yAxis: YAxis | null = this.model.getYAxis();
     if (yAxis) {
-      yAxis.setLabelCount(6, false);
+      yAxis.setLabelCount(6, true);
       yAxis.setTextSize(10);
       yAxis.setAxisMinimum(0);
-      yAxis.setAxisMaximum(80);
+      yAxis.setAxisMaximum(100);
       yAxis.setDrawLabels(false);
     }
   }

@@ -51,7 +51,8 @@ export default struct MyPage {
             let ret = await UserViewModel.setMainTeam(this.uid, 0)
             if(ret) {
               promptAction.showToast({
-                message: this.mainTeam + "已不再是您的主队！"
+                message: this.mainTeam + "已不再是您的主队！",
+                bottom: 400
               })
             }
             this.teams = await TeamViewModel.getTeamList()
@@ -122,7 +123,7 @@ export default struct MyPage {
                         this.uid = 0
                         this.avatar = 'app.media.BaseAvatar'
                         exit()
-                        promptAction.showToast({ message: '退出成功' });
+                        promptAction.showToast({ message: '退出成功' ,bottom: 400});
 
                       }
                     },
@@ -213,9 +214,9 @@ export default struct MyPage {
                           this.index = await TeamViewModel.getTeamRank(this.tid) + 1
                           this.mainTeam = team.teamName
                           this.TeamImageUrl = team.teamImageUrl
-                          promptAction.showToast({ message: '选择成功' });
+                          promptAction.showToast({ message: '选择成功' ,bottom: 400});
                         } else {
-                          promptAction.showToast({ message: '选择失败' });
+                          promptAction.showToast({ message: '选择失败' ,bottom: 400});
                         }
                       }
                     },

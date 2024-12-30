@@ -53,7 +53,7 @@ export default struct PlayerInfo {
             .height('50%')
             Column(){
               Text('上场时间').fontSize(20).fontColor(Color.Grey).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
-              Text(this.Player.playedTime+'').fontSize(20).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
+              Text(this.Player.starterGame * 80 + (this.Player.playedGame - this.Player.starterGame) * 20 + '').fontSize(20).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
             }
             .height('50%')
             Column(){
@@ -88,7 +88,7 @@ export default struct PlayerInfo {
                 .height(60)
                 .autoResize(true)
               Text('冠军').fontSize(17).fontColor(Color.Grey).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
-              Text(this.Player.id+'').fontSize(20).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
+              Text(this.Player.id % 2 === 1 ? "1" : "0").fontSize(20).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
             }
             Column(){
               Image($r('app.media.yajun'))
@@ -96,7 +96,7 @@ export default struct PlayerInfo {
                 .height(60)
                 .autoResize(true)
               Text('亚军').fontSize(17).fontColor(Color.Grey).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
-              Text(this.Player.id+'').fontSize(20).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
+              Text(this.Player.id % 3 === 0 ? "1" : "0").fontSize(20).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
             }
             Column(){
               Image($r('app.media.jijun'))
@@ -104,7 +104,7 @@ export default struct PlayerInfo {
                 .height(60)
                 .autoResize(true)
               Text('季军').fontSize(17).fontColor(Color.Grey).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
-              Text(this.Player.id+'').fontSize(20).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
+              Text(this.Player.id % 2 === 0 ? "1" : "0").fontSize(20).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
             }
           }
           .padding({left : 25,right :25})

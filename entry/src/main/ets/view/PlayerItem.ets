@@ -9,12 +9,12 @@ export default struct PlayerItem {
   @Prop PlayerItem: Player;
   @Prop data: number;
   @Prop rank: number;
-  @LocalStorageProp('backgroundImg') backgroundImg: Resource = $r('app.media.background')
+  @LocalStorageProp('backgroundImg') backgroundImg: Resource = $r('app.media.BlueBG')
   build() {
     Row(){
       Stack({ alignContent: Alignment.TopEnd }) {
         Text(''+this.data)
-          .fontColor(Color.White)
+          .fontColor(Color.Black)
           .textAlign(TextAlign.Center)
           .fontSize(this.data === -1 ? 0 : 26)
           .fontWeight(FontWeight.Medium)
@@ -30,7 +30,7 @@ export default struct PlayerItem {
         }else{
           Text(''+this.rank)
             .fontSize(20)
-            .fontColor(this.rank == 1 ? Color.Red : this.rank == 2 ? Color.Orange : this.rank == 3 ? Color.Yellow : '#D3D3D3')
+            .fontColor(this.rank == 1 ? Color.Red : this.rank == 2 ? Color.Orange : this.rank == 3 ? Color.Yellow : Color.Gray)
             .fontWeight(FontWeight.Bold)
             .textAlign(TextAlign.End)
             .margin({ top: 20, right: 16 })
@@ -47,7 +47,7 @@ export default struct PlayerItem {
           Column(){
             Text(this.PlayerItem.playerName)
               .fontSize(16)
-              .fontColor(Color.White)
+              .fontColor(Color.Black)
               .fontWeight(FontWeight.Normal)
               .textAlign(TextAlign.Start)
               .margin({ left: 1, top: 1 })
@@ -55,7 +55,7 @@ export default struct PlayerItem {
               .width(CommonConstants.FULL_WIDTH)
             Text(this.PlayerItem.team +' '+ this.PlayerItem.number + '号')
               .fontSize(13)
-              .fontColor(Color.White)
+              .fontColor(Color.Black)
               .fontWeight(FontWeight.Normal)
               .textAlign(TextAlign.Start)
               .width(CommonConstants.FULL_WIDTH)
