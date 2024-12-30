@@ -14,8 +14,8 @@ import { Team } from '../model/Team';
 @Entry
 @Component
 export struct GameDetail {
-  @Prop params: object = router.getParams();
-  @Prop game: Game = this.params['game'];
+  @State params: object = router.getParams();
+  @State game: Game = this.params['game'];
   private controller: TabsController = new TabsController()
   @State currentIndex: number = 0
   @State teamA : Team = new Team;
@@ -63,14 +63,14 @@ export struct GameDetail {
 
             Row() {
               // 比赛时间 Text 在最中间
-              Text(this.game.gameTime.toString())
-                .margin({ top: 15 ,right:18})
-                .fontSize(14)
-                .fontColor('#ff4f4f4f')
+              Text(new Date(this.game.gameTime).toLocaleDateString() + '  '+new Date(this.game.gameTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) )
+                .margin({ top: 15,right :45})
+                .fontSize(15)
+                .fontColor('#ff000000')
             }
             .justifyContent(FlexAlign.Center) // 水平居中
             .alignItems(VerticalAlign.Center) // 垂直居中
-            .width('100%') // 确保 Row 容器占满宽度
+            .width('99%') // 确保 Row 容器占满宽度
           }
 
           Row(){
@@ -240,7 +240,7 @@ export struct GameDetail {
         }else {
           Column(){
             Row() {
-              Text(this.teamB.teamName)
+              Text(this.teamA.teamName)
                 .fontSize(16)
                 .fontWeight('bold')
                 .margin({ left: 70, top: 15, bottom: 10 })

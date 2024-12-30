@@ -7,6 +7,7 @@ import TeamViewModel from '../viewmodel/TeamViewModel'
 import { getUid, Logged, setChanged } from "../utils/PreferenceUtil";
 import UserViewModel from "../viewmodel/UserViewModel";
 
+
 @Component
 export struct GameItem {
   @Prop year : boolean
@@ -31,7 +32,9 @@ export struct GameItem {
 
       // 添加时间与顶部分割线的间距
       Column() {
-        Text(this.game.gameTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })) // 24小时制显示时分
+        Text(this.year===true ?
+        this.game.gameTime.toLocaleDateString()+'  '+ this.game.gameTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }):
+        this.game.gameTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })) // 24小时制显示时分
           .fontSize(14)
           .textAlign(TextAlign.Center)
           .fontColor('#ff858585')

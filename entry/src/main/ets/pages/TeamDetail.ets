@@ -528,7 +528,7 @@ struct TeamDetail {
                 List() {
                   ForEach(this.team_games, (g: Game) => {
                     ListItem() {
-                      GameItem({ game: g })
+                      GameItem({ game: g, year : true})
                     }
                   })
                 }
