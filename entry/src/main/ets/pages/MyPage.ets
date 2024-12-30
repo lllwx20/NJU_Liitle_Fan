@@ -67,6 +67,7 @@ export default struct MyPage {
           .backgroundColor(Color.Blue)
           .onClick(async () => {
             this.handlePopup = !this.handlePopup
+            UserViewModel.clear(this.uid, this.tid)
             this.tid = 0;
             let ret = await UserViewModel.setMainTeam(this.uid, 0)
             if(ret) {
@@ -74,6 +75,14 @@ export default struct MyPage {
                 message: this.mainTeam + "已不再是您的主队！",
                 bottom: 400
               })
+              let user : User = await UserViewModel.getUser(this.uid)
+              this.games = []
+              for(let i : number = 0; i < user.games.length; i++) {
+                this.games.push(await GameViewModel.getGameById(user.games[i]))
+                this.games[i].gameTime = new Date(this.games[i].gameTime);
+                this.getGameStatus(this.games[i]);
+              }
+              this.games.sort((g1 : Game, g2 : Game)=> {return g1.gameTime.getTime() - g2.gameTime.getTime()})
             }
             if(this.cancel) {
               let user : User = await UserViewModel.getUser(this.uid)
@@ -83,7 +92,7 @@ export default struct MyPage {
                 this.games[i].gameTime = new Date(this.games[i].gameTime);
                 this.getGameStatus(this.games[i]);
               }
-              this.games.sort((g1 : Game, g2 : Game)=> {return g2.gameTime.getTime() - g1.gameTime.getTime()})
+              this.games.sort((g1 : Game, g2 : Game)=> {return g1.gameTime.getTime() - g2.gameTime.getTime()})
             }
             this.teams = await TeamViewModel.getTeamList()
             for(let i : number = 0; i < this.teams.length; i++) {
@@ -101,7 +110,7 @@ export default struct MyPage {
             this.handlePopup = !this.handlePopup
           })
       }
-    }.width(250).height(150).padding(5).backgroundColor('#F1F3F5')
+    }.width(250).height(100).padding(5).backgroundColor('#F1F3F5')
   }
 
   async aboutToAppear(): Promise<void> {
@@ -115,7 +124,7 @@ export default struct MyPage {
         this.games[i].gameTime = new Date(this.games[i].gameTime);
         this.getGameStatus(this.games[i]);
       }
-      this.games.sort((g1 : Game, g2 : Game)=> {return g2.gameTime.getTime() - g1.gameTime.getTime()})
+      this.games.sort((g1 : Game, g2 : Game)=> {return g1.gameTime.getTime() - g2.gameTime.getTime()})
       this.tid = user.tid;
     }
     if(this.tid != 0) {
@@ -255,7 +264,7 @@ export default struct MyPage {
                             this.games[i].gameTime = new Date(this.games[i].gameTime);
                             this.getGameStatus(this.games[i]);
                           }
-                          this.games.sort((g1 : Game, g2 : Game)=> {return g2.gameTime.getTime() - g1.gameTime.getTime()})
+                          this.games.sort((g1 : Game, g2 : Game)=> {return g1.gameTime.getTime() - g2.gameTime.getTime()})
                           promptAction.showToast({ message: '选择成功' ,bottom: 800});
                         } else {
                           promptAction.showToast({ message: '选择失败' ,bottom: 800});

@@ -51,12 +51,10 @@ class UserViewModel {
       let url = `${CommonConstants.SERVER}${CommonConstants.SUBSCRIBE}${uid}/${gid}`;
       httpRequestGet(url).then((data: ResponseResult) => {
         if (data.code === CommonConstants.SERVER_CODE_SUCCESS) {
-          promptAction.showToast({message : "选择成功！"})
           Logger.info(url + ' Login', JSON.stringify(data));
           resolve(data.data);
         } else {
           Logger.error(url + ' getList failed', JSON.stringify(data));
-          promptAction.showToast({message : "选择失败！"})
           reject($r('app.string.page_none_msg'));
         }
       })
@@ -68,19 +66,34 @@ class UserViewModel {
       let url = `${CommonConstants.SERVER}${CommonConstants.CANCEL}${uid}/${gid}`;
       httpRequestGet(url).then((data: ResponseResult) => {
         if (data.code === CommonConstants.SERVER_CODE_SUCCESS) {
-          promptAction.showToast({message : "选择成功！"})
           Logger.info(url + ' Login', JSON.stringify(data));
           resolve(data.data);
         } else {
           Logger.error(url + ' getList failed', JSON.stringify(data));
-          promptAction.showToast({message : "选择失败！"})
           reject($r('app.string.page_none_msg'));
         }
       })
     });
   }
 
-getUser(id : number) : Promise<User> {
+  clear(uid : number, tid : number) : Promise<boolean> {
+    return new Promise(async (resolve: Function, reject: Function) => {
+      let url = `${CommonConstants.SERVER}${CommonConstants.CLEAR_OLD}${uid}/${tid}`;
+      httpRequestGet(url).then((data: ResponseResult) => {
+        if (data.code === CommonConstants.SERVER_CODE_SUCCESS) {
+          Logger.info(url + ' Login', JSON.stringify(data));
+          resolve(data.data);
+        } else {
+          Logger.error(url + ' getList failed', JSON.stringify(data));
+          reject($r('app.string.page_none_msg'));
+        }
+      })
+    });
+  }
+
+
+
+  getUser(id : number) : Promise<User> {
   return new Promise(async (resolve: Function, reject: Function) => {
     let url = `${CommonConstants.SERVER}${CommonConstants.GET_USER}${id}`;
     httpRequestGet(url).then((data: ResponseResult) => {

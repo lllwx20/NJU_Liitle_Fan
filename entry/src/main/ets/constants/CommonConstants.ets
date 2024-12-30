@@ -26,6 +26,8 @@ export default class CommonConstants {
 
   static readonly GET_USER: string = '/api/users/';
 
+  static readonly CLEAR_OLD: string = '/api/users/clear/'
+
   static readonly SET_MAIN_TEAM: string = '/api/users/setMainTeam/';
 
   static readonly SUBSCRIBE: string = '/api/users/subscribe/';
