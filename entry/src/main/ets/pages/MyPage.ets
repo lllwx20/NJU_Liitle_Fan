@@ -1,15 +1,18 @@
 import { promptAction, router} from "@kit.ArkUI"
+import { Game, GameStatus } from "../model/Game"
 import { Team } from "../model/Team"
 import { User } from "../model/User"
-import { exit } from "../utils/PreferenceUtil"
+import Logger from "../utils/Logger"
+import { exit, haveChanged } from "../utils/PreferenceUtil"
+import { GameItem } from "../view/GameItem"
+import GameViewModel from "../viewmodel/GameViewModel"
 import TeamViewModel from "../viewmodel/TeamViewModel"
 import UserViewModel from "../viewmodel/UserViewModel"
+import { observer } from "@kit.TelephonyKit"
 
 
 @Component
 export default struct MyPage {
-
-
   @State login : boolean = false
   @Prop uid : number
   @State tid : number = 0
@@ -23,21 +26,38 @@ export default struct MyPage {
   @State teamItems : Array<SelectOption> = []
   @State tidArray : number[] = []
 
+  @State games : Game[] = []
+
   @State handlePopup: boolean = false
 
   @State cancel: boolean = false
 
+
+  getGameStatus(game : Game) {
+    const currentTime = new Date(); // 获取当前时间
+    const gameStartTime = game.gameTime;
+    const gameEndTime = new Date(gameStartTime.getTime() + 75 * 60 * 1000); // 比赛结束时间：开始时间 + 75分钟
+    if (currentTime < gameStartTime) {
+      game.status = GameStatus.NotStarted  // 比赛未开始
+    } else if (currentTime >= gameStartTime && currentTime <= gameEndTime) {
+      game.status = GameStatus.Ongoing // 比赛进行中
+    } else {
+      game.status = GameStatus.Ended  // 比赛已结束
+    }
+  }
+
+
   @Builder popupBuilder() {
     Column({ space: 25 }) {
       Text('是否更换主队').fontSize(20)
-      Row() {
+      /*Row() {
         Toggle({type: ToggleType.Checkbox})
           .onChange(()=> {
             this.cancel = !this.cancel
           })
         Text("取消订阅该队的比赛")
           .fontSize(15)
-      }
+      }*/
       Row({space: 25}) {
         Button('确认')
           .height(30)
@@ -54,6 +74,16 @@ export default struct MyPage {
                 message: this.mainTeam + "已不再是您的主队！",
                 bottom: 400
               })
+            }
+            if(this.cancel) {
+              let user : User = await UserViewModel.getUser(this.uid)
+              this.games = []
+              for(let i : number = 0; i < user.games.length; i++) {
+                this.games.push(await GameViewModel.getGameById(user.games[i]))
+                this.games[i].gameTime = new Date(this.games[i].gameTime);
+                this.getGameStatus(this.games[i]);
+              }
+              this.games.sort((g1 : Game, g2 : Game)=> {return g2.gameTime.getTime() - g1.gameTime.getTime()})
             }
             this.teams = await TeamViewModel.getTeamList()
             for(let i : number = 0; i < this.teams.length; i++) {
@@ -75,12 +105,17 @@ export default struct MyPage {
   }
 
   async aboutToAppear(): Promise<void> {
-
     if(this.uid != 0) {
       this.login = true
       let user : User = await UserViewModel.getUser(this.uid)
       this.userName = user.name;
       this.avatar = user.avatar
+      for(let i : number = 0; i < user.games.length; i++) {
+        this.games.push(await GameViewModel.getGameById(user.games[i]))
+        this.games[i].gameTime = new Date(this.games[i].gameTime);
+        this.getGameStatus(this.games[i]);
+      }
+      this.games.sort((g1 : Game, g2 : Game)=> {return g2.gameTime.getTime() - g1.gameTime.getTime()})
       this.tid = user.tid;
     }
     if(this.tid != 0) {
@@ -122,6 +157,7 @@ export default struct MyPage {
                         this.login = false
                         this.uid = 0
                         this.avatar = 'app.media.BaseAvatar'
+                        this.games = []
                         exit()
                         promptAction.showToast({ message: '退出成功' ,bottom: 400});
 
@@ -181,8 +217,6 @@ export default struct MyPage {
       .backgroundImagePosition(Alignment.Center)
       .backgroundImageSize(ImageSize.FILL)
 
-
-
       Row() {
         Text("我的主队")
           .fontSize(20)
@@ -214,9 +248,17 @@ export default struct MyPage {
                           this.index = await TeamViewModel.getTeamRank(this.tid) + 1
                           this.mainTeam = team.teamName
                           this.TeamImageUrl = team.teamImageUrl
-                          promptAction.showToast({ message: '选择成功' ,bottom: 400});
+                          let user : User = await UserViewModel.getUser(this.uid)
+                          this.games = []
+                          for(let i : number = 0; i < user.games.length; i++) {
+                            this.games.push(await GameViewModel.getGameById(user.games[i]))
+                            this.games[i].gameTime = new Date(this.games[i].gameTime);
+                            this.getGameStatus(this.games[i]);
+                          }
+                          this.games.sort((g1 : Game, g2 : Game)=> {return g2.gameTime.getTime() - g1.gameTime.getTime()})
+                          promptAction.showToast({ message: '选择成功' ,bottom: 800});
                         } else {
-                          promptAction.showToast({ message: '选择失败' ,bottom: 400});
+                          promptAction.showToast({ message: '选择失败' ,bottom: 800});
                         }
                       }
                     },
@@ -289,8 +331,21 @@ export default struct MyPage {
           .fontWeight(FontWeight.Bold)
           .textAlign(TextAlign.Center)
 
+        Scroll() {
+          List() {
+            ForEach(this.games, (g: Game) => {
+              ListItem() {
+                GameItem({ game: g , year : true})
+              }
+            })
+          }
+          .height('100%')
+          .width('100%')
+
+        }
       }
-      .height('100%')
+      .padding({bottom: 20})
+      .height('55%')
       .width('100%')
       .backgroundColor(Color.White)
       .margin({top : 20})

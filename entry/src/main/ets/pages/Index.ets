@@ -6,7 +6,7 @@ import TeamViewModel from '../viewmodel/TeamViewModel';
 import FirstPage from './FirstPage';
 import PlayerPage from './PlayerPage';
 import MyPage from './MyPage';
-import { getUid, Logged } from '../utils/PreferenceUtil';
+import { clearChange, getUid, haveChanged, Logged } from '../utils/PreferenceUtil';
 import { Game, GameStatus } from '../model/Game'
 import { Player} from '../model/Player'
 import GameViewModel from '../viewmodel/GameViewModel'
@@ -82,10 +82,6 @@ struct Index {
       }
       this.groupedMap.get(dateKey)?.push(game);
     })
-
-
-
-
 
   }
 
@@ -244,7 +240,7 @@ struct Index {
             }
             ForEach(entry[1], (singleGame: Game) => {
               ListItem() {
-                GameItem({ game : singleGame })
+                GameItem({ game : singleGame, year : false })
               }
             })
           })

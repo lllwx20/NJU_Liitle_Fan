@@ -76,7 +76,7 @@ export struct TeamItem {
     .onClick(() => {
       router.pushUrl({
         url: 'pages/TeamDetail',
-        params: {tid : this.team.id, index : this.index}
+        params: {tid : this.team.id}
       })
     })
   }

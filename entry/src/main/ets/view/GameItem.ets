@@ -1,19 +1,26 @@
 import { Game } from "../model/Game";
 import { Team } from "../model/Team";
-import { router } from '@kit.ArkUI';
+import { promptAction, router } from '@kit.ArkUI';
 import Logger from '../utils/Logger';
 import  GameViewModel  from '../viewmodel/GameViewModel'
 import TeamViewModel from '../viewmodel/TeamViewModel'
+import { getUid, Logged, setChanged } from "../utils/PreferenceUtil";
+import UserViewModel from "../viewmodel/UserViewModel";
 
 @Component
 export struct GameItem {
+  @Prop year : boolean
   @Prop game : Game ;
-  private teamA : Team = new Team;
-  private teamB : Team = new Team;
+  @State teamA : Team = new Team();
+  @State teamB : Team = new Team();
+  @State isSubscribed : boolean = false
 
 
 
   async aboutToAppear() {
+    if(Logged()) {
+      this.isSubscribed = await GameViewModel.IsSubscribed(parseInt(getUid()), this.game.id)
+    }
     this.teamA = await TeamViewModel.getTeam(this.game.team1);
     this.teamB = await TeamViewModel.getTeam(this.game.team2);
   }
@@ -41,11 +48,17 @@ export struct GameItem {
             .fontColor('#ff262626');
 
           // 队伍A的logo
-          Image($r(this.teamB.teamImageUrl))
+          Image($r(this.teamA.teamImageUrl))
             .width(38)
             .height(38)
             .borderRadius(50)
-            .margin({ right: 12 });
+            .margin({ right: 12 })
+          .onClick(() => {
+            router.pushUrl({
+              url: 'pages/TeamDetail',
+              params: { tid: this.teamA.id }
+            })
+          })
         }
         if (this.game.status==='已结束'){
           Text(`${this.game.team1Score} : ${this.game.team2Score}`)
@@ -55,11 +68,45 @@ export struct GameItem {
             .textAlign(TextAlign.Center); // 文本居中
         }
         else if (this.game.status==='未开始') {
-          Image($r('app.media.ring'))
-            .width(24)
-            .height(24)
-            .borderRadius(50)
-            .margin({left:14,right:14})
+          if(this.isSubscribed) {
+            Image($r('app.media.subscribe'))
+              .width(24)
+              .height(24)
+              .borderRadius(50)
+              .margin({ left: 14, right: 14 })
+              .onClick(async ()=>{
+                  let ret = await UserViewModel.cancel(parseInt(getUid()), this.game.id)
+                  if(ret) {
+                    this.isSubscribed = false
+                    setChanged()
+                    promptAction.showToast({message : "已取消订阅！",bottom: 400})
+
+                  } else {
+                    promptAction.showToast({message : "取消失败！",bottom: 400})
+                  }
+
+              })
+          } else {
+            Image($r('app.media.ring'))
+              .width(24)
+              .height(24)
+              .borderRadius(50)
+              .margin({ left: 14, right: 14 })
+              .onClick(async ()=>{
+                if(Logged()) {
+                  let ret = await UserViewModel.subscribe(parseInt(getUid()), this.game.id)
+                  if(ret) {
+                      setChanged()
+                      this.isSubscribed = true
+                      promptAction.showToast({message : "订阅成功！",bottom: 400})
+                  } else {
+                    promptAction.showToast({message : "订阅失败！",bottom: 400})
+                  }
+                } else{
+                  promptAction.showToast({message : "请先登录！",bottom: 400})
+                }
+              })
+          }
         }else {
           Image($r('app.media.onfire'))
             .width(22)
@@ -70,11 +117,17 @@ export struct GameItem {
 
         Row() {
           // 队伍B的logo
-          Image($r(this.teamA.teamImageUrl))
+          Image($r(this.teamB.teamImageUrl))
             .width(38)
             .height(38)
             .borderRadius(50)
-            .margin({ left: 12 });
+            .margin({ left: 12 })
+          .onClick(() => {
+            router.pushUrl({
+              url: 'pages/TeamDetail',
+              params: { tid: this.teamB.id }
+            })
+          })
 
           // 队伍B的名称
           Text(this.teamB.teamName)

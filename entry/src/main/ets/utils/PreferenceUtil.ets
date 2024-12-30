@@ -1,6 +1,7 @@
 
 import { preferences } from '@kit.ArkData';
 import { BusinessError } from '@kit.BasicServicesKit';
+import Logger from './Logger';
 
 let context  = getContext(this)
 const PREFERENCES_NAME = 'login';
@@ -20,8 +21,28 @@ export function Logged() : boolean {
 
 export function getUid() : string {
   let dataPreferences =  getPreference();
-  return dataPreferences.getSync('uid', 'default').toString()
+  if(dataPreferences.hasSync('uid'))
+    return dataPreferences.getSync('uid', 'default').toString()
+  else
+    return "0";
 }
+
+export function setChanged(){
+  let dataPreferences =  getPreference();
+  Logger.info("setchange")
+  dataPreferences.putSync('change', true)
+}
+
+export function haveChanged(){
+  let dataPreferences =  getPreference();
+  return dataPreferences.hasSync('change')
+}
+
+export function clearChange() {
+  let dataPreferences =  getPreference();
+  dataPreferences.deleteSync('change');
+}
+
 
 export function Login(uid : number) {
   let dataPreferences =  getPreference();

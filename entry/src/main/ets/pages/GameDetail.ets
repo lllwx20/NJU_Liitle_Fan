@@ -18,10 +18,10 @@ export struct GameDetail {
   @Prop game: Game = this.params['game'];
   private controller: TabsController = new TabsController()
   @State currentIndex: number = 0
-  private teamA : Team = new Team;
-  private teamB : Team = new Team;
-  private players_A : Player[] = [];
-  private players_B : Player[] = [];
+  @State teamA : Team = new Team;
+  @State teamB : Team = new Team;
+  @State players_A : Player[] = [];
+  @State players_B : Player[] = [];
 
   generateStats(): StatComparison[] {
     return [

@@ -7,6 +7,9 @@ import { hfp } from '@kit.ConnectivityKit';
 import { Player } from '../model/Player';
 import PlayerViewModel from '../viewmodel/PlayerViewModel';
 import PlayerItem from '../view/PlayerItem';
+import { Game, GameStatus } from '../model/Game';
+import GameViewModel from '../viewmodel/GameViewModel';
+import { GameItem } from '../view/GameItem';
 
 
 @Entry
@@ -20,7 +23,7 @@ struct TeamDetail {
   @State score: number = 0
   @State loss: number = 0;
   @State games: number = 0;
-  @State index: number = this.params['index']
+  @State index: number = 0
   @State points: number = 0;
   @State win: number = 10;
   @State draw: number = 2;
@@ -43,8 +46,24 @@ struct TeamDetail {
   @State visit_font: string = 'gray'
   @State visit_bg: string = 'white'
 
+  @State team_games : Game[] = []
+
+  getGameStatus(game : Game) {
+    const currentTime = new Date(); // 获取当前时间
+    const gameStartTime = game.gameTime;
+    const gameEndTime = new Date(gameStartTime.getTime() + 75 * 60 * 1000); // 比赛结束时间：开始时间 + 75分钟
+    if (currentTime < gameStartTime) {
+      game.status = GameStatus.NotStarted  // 比赛未开始
+    } else if (currentTime >= gameStartTime && currentTime <= gameEndTime) {
+      game.status = GameStatus.Ongoing // 比赛进行中
+    } else {
+      game.status = GameStatus.Ended  // 比赛已结束
+    }
+  }
+
   async aboutToAppear() {
     this.team = await TeamViewModel.getTeam(this.tid);
+    this.index = await TeamViewModel.getTeamRank(this.tid) + 1
     this.name = this.team.teamName
     this.players = await PlayerViewModel.getPlayerByTeam(this.name)
     this.totalPoints = this.team.teamPoints
@@ -64,6 +83,12 @@ struct TeamDetail {
     this.drawRate = parseFloat((this.draw / (this.win + this.draw + this.lose) * 100).toFixed(2)) + "%";
     this.loseRate = parseFloat((this.lose / (this.win + this.draw + this.lose) * 100).toFixed(2)) + "%";
     this.flag = false
+    this.team_games = await GameViewModel.getGamesByTeam(this.tid)
+    for(let i : number = 0; i < this.team_games.length; i++) {
+      this.team_games[i].gameTime = new Date(this.team_games[i].gameTime);
+      this.getGameStatus(this.team_games[i]);
+    }
+    this.team_games.sort((g1 : Game, g2 : Game)=> {return g2.gameTime.getTime() - g1.gameTime.getTime()})
   }
 
   @Builder
@@ -471,31 +496,51 @@ struct TeamDetail {
           }.tabBar("数据")
 
           TabContent() {
-            List({ space: 10 }) {
-              ForEach(this.players, (item: Player, index: number) => {
-                ListItem() {
-                  PlayerItem({
-                    PlayerItem: item,
-                    rank: index + 1,
-                    data: -1
+              Scroll() {
+                List({ space: 10 }) {
+                  ForEach(this.players, (item: Player, index: number) => {
+                    ListItem() {
+                      PlayerItem({
+                        PlayerItem: item,
+                        rank: index + 1,
+                        data: -1
+                      })
+                    }
+                    .width('95%')
+                    .margin({
+                      left: 11
+                    })
+                    .borderRadius(15)
                   })
                 }
-                .width('95%')
-                .margin({
-                  left: 11
-                })
-                .borderRadius(15)
-              })
-            }
-            .width('100%')
-            .height('100%')
+                .width('100%')
+                .height('100%')
+              }
+              .position({top : 0})
+              .width('100%')
+              .height('75%')
             .backgroundColor('#F1F3F5')
+
           }.tabBar("阵容")
 
           TabContent() {
+              Scroll() {
+                List() {
+                  ForEach(this.team_games, (g: Game) => {
+                    ListItem() {
+                      GameItem({ game: g })
+                    }
+                  })
+                }
+                .enableScrollInteraction(true)
 
+              }
+              .position({top : 0})
+              .width('100%')
+              .height('75%')
           }.tabBar("赛程")
         }
+        .scrollable(true)
 
       }
     }

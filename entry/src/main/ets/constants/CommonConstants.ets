@@ -28,9 +28,17 @@ export default class CommonConstants {
 
   static readonly SET_MAIN_TEAM: string = '/api/users/setMainTeam/';
 
+  static readonly SUBSCRIBE: string = '/api/users/subscribe/';
+
+  static readonly CANCEL: string = '/api/users/cancel/';
+
   static readonly GET_GAME: string = '/api/games/getGameById/'
 
   static readonly GET_ALL_GAME: string = '/api/games/getGameList'
+
+  static readonly IS_SUBSCRIBED: string = '/api/games/IsSubscribed/'
+
+  static readonly GET_GAMES_BY_TEAM: string = '/api/games/getGamesByTeam/'
 
   static readonly SERVER_CODE_SUCCESS: string = '000';
 
