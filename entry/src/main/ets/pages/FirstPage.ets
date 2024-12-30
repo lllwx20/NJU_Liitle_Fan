@@ -1,4 +1,4 @@
-import { router, Router } from "@kit.ArkUI";
+import { router } from "@kit.ArkUI";
 
 @Component
 export default struct FirstPage {
@@ -77,7 +77,12 @@ struct infoBanner {
             .objectFit(ImageFit.Contain)
             .width('100%')
             .padding({ top: 11, left: 16, right: 16 })
-            .borderRadius(12);
+            .borderRadius(12)
+            .onClick(() => {
+              router.pushUrl({
+                url: 'pages/NewsDetail',
+              })
+            })
 
           Text(this.titleList[index])
             .fontSize(16)
@@ -202,7 +207,7 @@ struct NewsList {
     .borderRadius(10)
     .onClick(() => {
       router.pushUrl({
-        url: `pages/${item.id}`,
+        url: 'pages/NewsDetail',
       })
     })
     .margin({ bottom: 10 }); // 每个新闻卡片之间的间距

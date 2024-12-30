@@ -16,6 +16,8 @@ export default class CommonConstants {
 
   static readonly GET_TEAM_LIST: string = '/api/teams/getAll';
 
+  static readonly GET_TEAM_RANK: string = '/api/teams/getTeamRank/'
+
   static readonly GET_TEAM: string = '/api/teams/getTeam/';
 
   static readonly RATE_PLAYER: string = '/api/players/ratePlayer';

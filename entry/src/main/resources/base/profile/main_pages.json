@@ -3,6 +3,8 @@
     "pages/Index",
     "pages/TeamDetail",
     "pages/PlayerDetail",
+    "pages/GameDetail",
+    "pages/NewsDetail",
     "pages/Login",
     "pages/Register"
   ]
