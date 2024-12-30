@@ -134,7 +134,7 @@ struct TeamDetail {
 
         Row() {
           Column() {
-            Image($r('app.media.GoBack'))
+            Image($r('app.media.BackBlack'))
               .width(20)
               .onClick(() => {
                 router.back()
@@ -143,34 +143,32 @@ struct TeamDetail {
               .margin({ left : 6 })
             Text(this.name)
               .fontSize(30)
-              .fontColor('white')
+              .fontWeight('bold')
               .margin({ top: 10, left: 20 })
               .alignSelf(ItemAlign.Start)
             Row() {
               Column() {
+                Text("联赛排名")
+                .fontSize(15)
+                .margin({ left: 20, top: 20 })
+
                 Text(this.index.toString())
                   .fontSize(35)
                   .fontWeight(FontWeight.Bold)
                   .fontStyle(FontStyle.Italic)
-                  .fontColor('white')
-                  .margin({ left: 15, top: 15 })
-                Text("联赛排名")
-                  .fontSize(15)
-                  .fontColor('#E2EAF4')
-                  .margin({ left: 15 })
+                  .margin({ left: 20, top: 5 })
               }
 
               Column() {
+                Text("积分")
+                .fontSize(15)
+                .margin({ left: 10 ,top: 20})
+
                 Text(this.totalPoints.toString())
                   .fontSize(35)
                   .fontWeight(FontWeight.Bold)
                   .fontStyle(FontStyle.Italic)
-                  .fontColor('white')
-                  .margin({ left: 15, top: 15 })
-                Text("积分")
-                  .fontSize(15)
-                  .fontColor('#E2EAF4')
-                  .margin({ left: 15 })
+                  .margin({ left: 5, top: 5 })
               }.margin({ left: 50 })
             }
           }
@@ -497,24 +495,26 @@ struct TeamDetail {
 
           TabContent() {
               Scroll() {
-                List({ space: 10 }) {
-                  ForEach(this.players, (item: Player, index: number) => {
-                    ListItem() {
-                      PlayerItem({
-                        PlayerItem: item,
-                        rank: index + 1,
-                        data: -1
+                Column() {
+                  List({ space: 10 }) {
+                    ForEach(this.players, (item: Player, index: number) => {
+                      ListItem() {
+                        PlayerItem({
+                          PlayerItem: item,
+                          rank: index + 1,
+                          data: -1
+                        })
+                      }
+                      .width('95%')
+                      .margin({
+                        left: 11
                       })
-                    }
-                    .width('95%')
-                    .margin({
-                      left: 11
+                      .borderRadius(15)
                     })
-                    .borderRadius(15)
-                  })
+                  }
+                  .width('100%')
+                  .height('100%')
                 }
-                .width('100%')
-                .height('100%')
               }
               .position({top : 0})
               .width('100%')

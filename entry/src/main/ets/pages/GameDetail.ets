@@ -1,15 +1,11 @@
-import { App, router } from '@kit.ArkUI';
+import { router, promptAction } from '@kit.ArkUI';
 import PlayerViewModel from '../viewmodel/PlayerViewModel';
-import TeamViewModel from '../viewmodel/TeamViewModel'
-import CommonConstants from '../constants/CommonConstants';
+import TeamViewModel from '../viewmodel/TeamViewModel';
+import UserViewModel from "../viewmodel/UserViewModel";
 import { Game, StatComparison } from '../model/Game';
 import { Player } from '../model/Player';
-import Logger from '../utils/Logger';
-import { Container } from '@kit.ArkGraphics3D';
 import { Team } from '../model/Team';
-
-
-
+import { getUid, Logged, setChanged } from "../utils/PreferenceUtil";
 
 @Entry
 @Component
@@ -22,6 +18,7 @@ export struct GameDetail {
   @State teamB : Team = new Team;
   @State players_A : Player[] = [];
   @State players_B : Player[] = [];
+  @State isSubscribed : boolean = false
 
   generateStats(): StatComparison[] {
     return [
@@ -50,7 +47,7 @@ export struct GameDetail {
           Row() {
             Row() {
               // 返回按钮 Image 在最左端
-              Image($r('app.media.GoBack'))
+              Image($r('app.media.BackBlack'))
                 .width(20)
                 .height(20)
                 .margin({ left : 6 ,top : 5 })
@@ -65,8 +62,8 @@ export struct GameDetail {
               // 比赛时间 Text 在最中间
               Text(this.game.gameTime.toString())
                 .margin({ top: 15 ,right:18})
-                .fontSize(14)
-                .fontColor('#ff4f4f4f')
+                .fontSize(15)
+                .fontWeight('bold')
             }
             .justifyContent(FlexAlign.Center) // 水平居中
             .alignItems(VerticalAlign.Center) // 垂直居中
@@ -84,7 +81,6 @@ export struct GameDetail {
             Text(`${this.game.team1Score} : ${this.game.team2Score}`)
               .fontSize(40)
               .fontWeight('bold')
-              .fontColor('#ffffff')
               .textAlign(TextAlign.Center)
               .margin({ top:35 })
               .fontWeight('bold');
@@ -100,18 +96,17 @@ export struct GameDetail {
             Text(this.teamA.teamName)
               .fontSize(18)
               .margin({top:15,right:80})
-              .fontColor('#ffffffff')
+              .fontWeight('bold')
 
             Text(this.teamB.teamName)
               .fontSize(18)
               .margin({top:15,left:80})
-              .fontColor('#ffffffff')
-
+              .fontWeight('bold')
           }
           Row(){
             Text("已结束")
-              .fontSize(14)
-              .fontColor('#ff737373')
+              .fontSize(16)
+              .fontWeight('bold')
           }
         }
         .backgroundImage($r('app.media.game_detail_background'))
@@ -315,10 +310,10 @@ export struct GameDetail {
           Row() {
             Row() {
               // 返回按钮 Image 在最左端
-              Image($r('app.media.GoBack'))
+              Image($r('app.media.BackBlack'))
                 .width(20)
                 .height(20)
-                .margin({ top: 15 })
+                .margin({ left: 6, top: 5 })
                 .onClick(() => {
                   router.back();
                 })
@@ -330,8 +325,8 @@ export struct GameDetail {
               // 比赛时间 Text 在最中间
               Text(this.game.gameTime.toString())
                 .margin({ top: 15 ,right:18})
-                .fontSize(14)
-                .fontColor('#ff4f4f4f')
+                .fontSize(15)
+                .fontWeight('bold')
             }
             .justifyContent(FlexAlign.Center) // 水平居中
             .alignItems(VerticalAlign.Center) // 垂直居中
@@ -344,14 +339,11 @@ export struct GameDetail {
               .borderRadius(50)
               .margin({ right: 20 ,top:30});
 
-            // 比分
-            Text(`? : ?`)
-              .fontSize(40)
-              .fontWeight('bold')
-              .fontColor('#ffffffff')
-              .textAlign(TextAlign.Center)
-              .margin({ top:35 })
-              .fontWeight('bold');
+            Image($r('app.media.onfire'))
+              .width(30)
+              .height(30)
+              .borderRadius(50)
+              .margin({left:25, right: 25, bottom: -35})
 
             // 队伍B队徽
             Image($r(this.teamB.teamImageUrl))
@@ -364,18 +356,19 @@ export struct GameDetail {
             Text(this.teamA.teamName)
               .fontSize(18)
               .margin({top:15,right:80})
-              .fontColor('#ffffffff')
+              .fontWeight('bold')
 
             Text(this.teamB.teamName)
               .fontSize(18)
               .margin({top: 15,left:80})
-              .fontColor('#ffffffff')
+              .fontWeight('bold')
 
           }
           Row(){
             Text("进行中")
-              .fontSize(14)
-              .fontColor('#ffffffff')
+              .fontSize(16)
+              .fontColor(Color.Green)
+              .fontWeight('bold')
           }
         }
         .backgroundImage($r('app.media.game_detail_background'))
@@ -578,10 +571,10 @@ export struct GameDetail {
           Row() {
             Row() {
               // 返回按钮 Image 在最左端
-              Image($r('app.media.GoBack'))
+              Image($r('app.media.BackBlack'))
                 .width(20)
                 .height(20)
-                .margin({ top: 15 })
+                .margin({ left: 6, top: 5 })
                 .onClick(() => {
                   router.back();
                 })
@@ -593,8 +586,8 @@ export struct GameDetail {
               // 比赛时间 Text 在最中间
               Text(this.game.gameTime.toString())
                 .margin({ top: 15 ,right:18})
-                .fontSize(14)
-                .fontColor('#ff4f4f4f')
+                .fontSize(15)
+                .fontWeight('bold')
             }
             .justifyContent(FlexAlign.Center) // 水平居中
             .alignItems(VerticalAlign.Center) // 垂直居中
@@ -607,13 +600,11 @@ export struct GameDetail {
               .borderRadius(50)
               .margin({ right: 20 ,top:30});
 
-            // 比分
-            Text(`? : ?`)
-              .fontSize(40)
+            Text(`vs`)
+              .fontSize(30)
               .fontWeight('bold')
-              .fontColor('#ffffffff')
               .textAlign(TextAlign.Center)
-              .margin({ top:35 })
+              .margin({ left: 10, right: 10, top:35 })
               .fontWeight('bold');
 
             // 队伍B队徽
@@ -626,19 +617,20 @@ export struct GameDetail {
           Row(){
             Text(this.teamA.teamName)
               .fontSize(18)
-              .margin({top:15,right:80})
-              .fontColor('#ffffffff')
+              .margin({top:15, right: 60})
+              .fontWeight('bold')
 
             Text(this.teamB.teamName)
               .fontSize(18)
-              .margin({top: 15,left:80})
-              .fontColor('#ffffffff')
+              .margin({top: 15, left: 60})
+              .fontWeight('bold')
 
           }
           Row(){
             Text("未开始")
-              .fontSize(14)
-              .fontColor('#ffffffff')
+              .fontSize(16)
+              .fontColor(Color.Grey)
+              .fontWeight('bold')
           }
         }
         .backgroundImage($r('app.media.game_detail_background'))

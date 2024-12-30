@@ -6,9 +6,8 @@ import TeamViewModel from '../viewmodel/TeamViewModel';
 import FirstPage from './FirstPage';
 import PlayerPage from './PlayerPage';
 import MyPage from './MyPage';
-import { clearChange, getUid, haveChanged, Logged } from '../utils/PreferenceUtil';
+import { getUid, Logged } from '../utils/PreferenceUtil';
 import { Game, GameStatus } from '../model/Game'
-import { Player} from '../model/Player'
 import GameViewModel from '../viewmodel/GameViewModel'
 type GroupedMap = Map<string, Game[]>;
 
@@ -141,16 +140,18 @@ struct Index {
 
         Stack() {
           Scroll(this.myScroller) {
-            List() {
-              ForEach(this.teams, (team: Team, index: number) => {
-                ListItem() {
-                  TeamItem({
-                    team: team,
-                    index: index + 1,
-                  })
-                }
-              })
-            }.margin({ top: 50 })
+            Column() {
+              List() {
+                ForEach(this.teams, (team: Team, index: number) => {
+                  ListItem() {
+                    TeamItem({
+                      team: team,
+                      index: index + 1,
+                    })
+                  }
+                })
+              }.margin({ top: 50 })
+            }
           }
           .width('100%')
           .height('100%')

@@ -36,21 +36,21 @@ struct NewsDetail {
 
     build() {
         Column() {
+            // 返回按钮
+            Row() {
+                Image($r('app.media.BackBlack'))
+                    .width(45)
+                    .height(40)
+                    .onClick(() => {
+                        router.back();
+                    })
+                    .padding(10);
+            }
+            .align(Alignment.TopStart)
+            .width('100%');
+
             Scroll() {
                 Column() {
-                    // 返回按钮
-                    Row() {
-                        Image($r('app.media.BackBlack'))
-                            .width(45)
-                            .height(45)
-                            .onClick(() => {
-                                router.back();
-                            })
-                            .padding(10);
-                    }
-                    .align(Alignment.TopStart)
-                    .width('100%');
-
                     // 新闻标题
                     Text(this.newsTitle)
                         .fontSize(24)
@@ -64,11 +64,11 @@ struct NewsDetail {
                             Image(item.imageSrc)
                                 .objectFit(ImageFit.Contain)
                                 .width('100%')
-                                .padding({ top: 6, left: 5, right: 5, bottom: 6 })
+                                .padding({ top: 3, left: 3, right: 3, bottom: 3 })
                                 .borderRadius(12)
                         }, (item: BannerClass, index: number) => item.id);
                     }
-                    .padding(19)
+                    .padding(10)
                     .autoPlay(true)
                     .loop(true)
                     .indicator(
@@ -81,6 +81,7 @@ struct NewsDetail {
                         .padding(10)
                         .align(Alignment.TopStart)
                         .padding(19)
+
                     Row(){
                         Divider()
                         .width('30%')

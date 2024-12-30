@@ -18,15 +18,6 @@ export default struct FirstPage {
           infoBanner()
 
           Row() {
-            Text('比赛预告')
-              .padding(10)
-              .fontSize(18)
-              .fontWeight('bold');
-          }
-
-          mostRecentMatches()
-
-          Row() {
             Text('热门资讯')
               .padding(10)
               .fontSize(18)
@@ -34,6 +25,26 @@ export default struct FirstPage {
           }
 
           NewsList()
+
+          Row(){
+            Divider()
+              .width('30%')
+              .strokeWidth(1.2)
+              .color(Color.Gray)
+              .opacity(0.5)
+            Text('我是有底线的')
+              .fontColor(Color.Gray)
+              .fontSize(13)
+              .padding(10)
+              .align(Alignment.TopStart)
+            Divider()
+              .width('30%')
+              .strokeWidth(1.2)
+              .color(Color.Gray)
+              .opacity(0.5)
+
+          }
+          .margin({top : 15,bottom : 15})
         }
       }.layoutWeight(1)
       .scrollBar(BarState.Off)
@@ -99,57 +110,6 @@ struct infoBanner {
       new DotIndicator()
         .color('#1a000000')
         .selectedColor('#0A59F7'));
-  }
-}
-
-class Match {
-  id: string;
-  homeTeam: string;
-  awayTeam: string;
-  matchTime: string;
-
-  constructor(id: string, homeTeam: string, awayTeam: string, matchTime: string) {
-    this.id = id;
-    this.homeTeam = homeTeam;
-    this.awayTeam = awayTeam;
-    this.matchTime = matchTime;
-  }
-}
-
-@Component
-struct mostRecentMatches {
-  @State matchList: Array<Match> = [
-    new Match('match1', '球队A', '球队B', '2024-01-01 18:00'),
-    new Match('match2', '球队C', '球队D', '2024-01-02 20:00'),
-  ];
-
-  build() {
-    Row() {
-      ForEach(this.matchList, (match: Match) => {
-        this.renderMatchCard(match);
-      }, (match: Match) => match.id);
-    }
-    .width('100%');
-  }
-
-  @Builder
-  renderMatchCard(match: Match) {
-    Column() {
-      Text(`${match.homeTeam} vs ${match.awayTeam}`)
-        .fontSize(16)
-        .fontWeight('bold')
-        .padding(5);
-
-      Text(match.matchTime)
-        .fontSize(14)
-        .fontColor('#888888')
-        .padding(5);
-    }
-    .width('45%') // 每个卡片占一行的45%
-    .padding(10)
-    .margin({ left: 10, right: 10 }) // 增加左右间距
-    .backgroundColor('#FFFFFF')
-    .borderRadius(10)
   }
 }
 

@@ -31,7 +31,7 @@ struct  PlayerDetail {
       Column() {
         Column(){
           Button({ type: ButtonType.Circle, stateEffect: true }) {
-            Image($r('app.media.GoBack')).width(20).height(20)
+            Image($r('app.media.BackBlack')).width(20).height(20)
           }
           .backgroundImage($r('app.media.TeamBackground2'))
           .width(30)
@@ -56,8 +56,7 @@ struct  PlayerDetail {
             Column(){
               Text(this.Player.playerName)
                 .fontSize(30)
-                .fontColor(Color.White)
-                .fontWeight(FontWeight.Normal)
+                .fontWeight('bold')
                 .textAlign(TextAlign.Start)
                 .margin({ left: 1, top: 1 })
                 .height('40%')
@@ -69,8 +68,7 @@ struct  PlayerDetail {
                   .autoResize(true)
                 Text(this.Player.team)
                   .fontSize(20)
-                  .fontColor(Color.White)
-                  .fontWeight(FontWeight.Normal)
+                  .fontWeight('bold')
                   .textAlign(TextAlign.Start)
 
               }
@@ -85,16 +83,12 @@ struct  PlayerDetail {
           Row(){
             Text(this.Player.number+'号')
               .fontSize(20)
-              .fontColor(Color.White)
             Text(this.Player.id % 8 === 0 ? '左脚' :'右脚')
               .fontSize(20)
-              .fontColor(Color.White)
             Text(this.Player.playerPosition)
               .fontSize(20)
-              .fontColor(Color.White)
             Text(2024 - parseInt(this.Player.bornYearMonth.substring(0,4))+'岁')
               .fontSize(20)
-              .fontColor(Color.White)
           }
           .padding({left : 30,right : 30,bottom : 10})
           .width(CommonConstants.FULL_WIDTH)
