@@ -7,8 +7,9 @@ import FirstPage from './FirstPage';
 import PlayerPage from './PlayerPage';
 import MyPage from './MyPage';
 import { getUid, Logged } from '../utils/PreferenceUtil';
-import { Game } from '../model/Game'
+import { Game, GameStatus } from '../model/Game'
 import { Player} from '../model/Player'
+import GameViewModel from '../viewmodel/GameViewModel'
 type GroupedMap = Map<string, Game[]>;
 
 @Entry
@@ -21,171 +22,61 @@ struct Index {
   @State imageX : number = 200
   @State imageY : number = 55
   private teams: Team[] = [];
+  private games: Game[] = [];
   //用于集成game类
-  private team1 : Team[] = [];
-  private games : Game[] = [];
-  private players : Player[] = [];
   private groupedMap: GroupedMap = new Map();
 
 
   myScroller: Scroller = new Scroller()
   @State yOffset: number = 0
 
+
+  getFormattedTime(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  }
+
+  getGameStatus(game : Game) {
+    const currentTime = new Date(); // 获取当前时间
+    const gameStartTime = game.gameTime;
+    const gameEndTime = new Date(gameStartTime.getTime() + 75 * 60 * 1000); // 比赛结束时间：开始时间 + 75分钟
+    if (currentTime < gameStartTime) {
+      game.status = GameStatus.NotStarted  // 比赛未开始
+    } else if (currentTime >= gameStartTime && currentTime <= gameEndTime) {
+      game.status = GameStatus.Ongoing // 比赛进行中
+    } else {
+      game.status = GameStatus.Ended  // 比赛已结束
+    }
+  }
+
+
   async aboutToAppear() {
+    this.games = await GameViewModel.getAllGames()
     this.teams = await TeamViewModel.getTeamList()
+
+
+
     Logger.info('Team List:', JSON.stringify(this.teams));
-
-    this.team1.push({
-      id: 0,
-      teamName: "排头",
-      teamPoints: 0,
-      teamPlayed: 0,
-      teamWin: 0,
-      teamDraw: 0,
-      teamLose: 0,
-      teamGoals: 0,
-      teamLoss: 0,
-      teamImageUrl: '',
-      players: [],
-      teamType: '',
-      homePlayed: 0,
-      visitPlayed: 0,
-      homeGoals: 0,
-      visitGoals: 0,
-      homeLoss: 0,
-      visitLoss: 0,
-      homePoints: 0,
-      visitPoints: 0,
-      homeWin: 0,
-      visitWin: 0,
-      homeLose: 0,
-      visitLose: 0,
-      homeDraw: 0,
-      visitDraw: 0,
-      teamSupport: 0,
-      teamSteal: 0,
-      teamFoul: 0,
-      teamYellow: 0,
-
-    })
-    const teamNames = ["软院", "数学", "历史", "文学", "医学", "地海", "匡院", "地科", "商院", "生科"];
-    const teamLogos = [
-      'app.media.team1logo',
-      'app.media.team2logo',
-      'app.media.team3logo',
-      'app.media.team4logo',
-      'app.media.team5logo',
-      'app.media.team6logo',
-      'app.media.team7logo',
-      'app.media.team8logo',
-      'app.media.team9logo',
-      'app.media.team10logo',
-    ];
-
-
-    const player1 = new Player();
-    player1.playerName = "谷雨泽"
-    player1.number = 10;
-    player1.playerImageUrl = 'app.media.people';
-
-    this.players.push(player1);
-    this.players.push(player1);
-    this.players.push(player1);
-    this.players.push(player1);
-    this.players.push(player1);
-    this.players.push(player1);
-    this.players.push(player1);
-    this.players.push(player1);
-    this.players.push(player1);
-    this.players.push(player1);
-
-
-
-
-
-
-    for (let i = 0; i < teamNames.length; i++) {
-      this.team1.push({
-        id: i,
-        teamName: teamNames[i],
-        teamImageUrl: teamLogos[i],
-        players: this.players,
-        teamType: '',
-        teamPlayed: Math.floor(Math.random() * (40 - 20) + 20),
-        homePlayed: 0,
-        visitPlayed: 0,
-        teamGoals: Math.floor(Math.random() * (40 - 20) + 20),
-        homeGoals: 0,
-        visitGoals: 0,
-        teamLoss: Math.floor(Math.random() * (40 - 20) + 20),
-        homeLoss: 0,
-        visitLoss: 0,
-        teamPoints: Math.floor(Math.random() * (40 - 20) + 20),
-        homePoints: 0,
-        visitPoints: 0,
-        teamWin: Math.floor(Math.random() * (40 - 20) + 20),
-        homeWin: 0,
-        visitWin: 0,
-        teamLose: Math.floor(Math.random() * (40 - 20) + 20),
-        homeLose: 0,
-        visitLose: 0,
-        teamDraw: Math.floor(Math.random() * (40 - 20) + 20),
-        homeDraw: 0,
-        visitDraw: 0,
-        teamSupport: Math.floor(Math.random() * (40 - 20) + 20),
-        teamSteal: 0,
-        teamFoul: 0,
-        teamYellow: Math.floor(Math.random() * (40 - 20) + 20),
-
-      })
-    }
-
-
-    const getTeamByName = (name: string): Team | undefined => {
-      return this.team1.find(t => t.teamName === name);
-    };
-
-    // 初始化比赛数组，使用已存在的队伍对象
-    const teamSoftYuan = getTeamByName("软院");
-    const teamShuXue = getTeamByName("数学");
-    const teamLiShi = getTeamByName("历史");
-    const teamWenXue = getTeamByName("文学");
-    const teamYiXue = getTeamByName("医学");
-    const teamDiHai = getTeamByName("地海");
-    const teamKuangYuan = getTeamByName("匡院");
-    const teamDiKe = getTeamByName("地科");
-    const teamShangYuan = getTeamByName("商院");
-    const teamShengKe = getTeamByName("生科");
-
-
-
-    if (teamSoftYuan && teamShuXue && teamLiShi && teamWenXue  && teamYiXue && teamDiHai && teamKuangYuan && teamDiKe && teamShangYuan && teamShengKe) {
-
-      const currentTime = new Date();
-
-      this.games.push(new Game(teamSoftYuan, teamShuXue, 2, 1, new Date(currentTime.getTime() + 3 * 60 * 60 * 1000)));
-      this.games.push(new Game(teamLiShi, teamWenXue, 1, 3, new Date(currentTime.getTime() + 5 * 60 * 60 * 1000)));
-      this.games.push(new Game(teamYiXue, teamDiHai, 3, 1, new Date(currentTime.getTime() + 7 * 60 * 60 * 1000)));
-      this.games.push(new Game(teamKuangYuan, teamDiKe, 5, 0, new Date(currentTime.getTime() + 9 * 60 * 60 * 1000)));
-      this.games.push(new Game(teamSoftYuan, teamShuXue, 2, 1, new Date(currentTime.getTime() - 40 * 60 * 1000)));
-      this.games.push(new Game(teamLiShi, teamWenXue, 1, 3, new Date(currentTime.getTime() - 60 * 60 * 1000)));
-      this.games.push(new Game(teamYiXue, teamDiHai, 1, 3, new Date(currentTime.getTime() - 50 * 60 * 1000)));
-      this.games.push(new Game(teamKuangYuan, teamDiKe, 4, 2, new Date(currentTime.getTime() - 30 * 60 * 1000)));
-      this.games.push(new Game(teamShangYuan, teamDiHai, 0, 0, new Date(currentTime.getTime() - 100 * 60 * 1000)));
-      this.games.push(new Game(teamShengKe, teamDiKe, 0, 0, new Date(currentTime.getTime() - 120 * 60 * 1000)));
-      this.games.push(new Game(teamSoftYuan, teamShuXue, 2, 1, new Date(currentTime.getTime() - 80 * 60 * 1000)));
-      this.games.push(new Game(teamLiShi, teamWenXue, 1, 3, new Date(currentTime.getTime() - 90 * 60 * 1000)));
-      this.games.push(new Game(teamYiXue, teamDiHai, 8, 2, new Date(currentTime.getTime() - 110 * 60 * 1000)));
-      this.games.push(new Game(teamKuangYuan, teamDiKe, 4, 1, new Date(currentTime.getTime() - 130 * 60 * 1000)));
-      this.games.push(new Game(teamSoftYuan, teamShuXue, 2, 1, new Date(currentTime.getTime() + 2 * 60 * 60 * 1000)));
-      this.games.push(new Game(teamLiShi, teamWenXue, 1, 3, new Date(currentTime.getTime() + 4 * 60 * 60 * 1000)));
-      this.games.push(new Game(teamYiXue, teamDiHai, 1, 3, new Date(currentTime.getTime() + 6 * 60 * 60 * 1000)));
-      this.games.push(new Game(teamShangYuan, teamShengKe, 4, 2, new Date(currentTime.getTime() - 10 * 60 * 1000)));
-    }
     // 排序比赛
-    this.games.sort((a, b) => a.time.getTime() - b.time.getTime());
+
+    this.games.sort((a, b) => {
+      const aTime = new Date(a.gameTime).getTime();
+      const bTime = new Date(b.gameTime).getTime();
+      return aTime - bTime;
+    });
+
+    for (let i = 0; i < this.games.length; i++){
+      this.games[i].gameTime = new Date(this.games[i].gameTime);
+      this.getGameStatus(this.games[i]);
+    }
+
+
     this.games.forEach((game) => {
-      const dateKey = game.getFormattedTime().split(" ")[0]; // 格式化后的日期部分
+      const dateKey = this.getFormattedTime(game.gameTime).split(" ")[0]; // 格式化后的日期部分
       if (!this.groupedMap.has(dateKey)) {
         this.groupedMap.set(dateKey, []);
       }
@@ -202,6 +93,12 @@ struct Index {
 
   @State change : boolean = false;
 
+  private getDayOfWeek(dateStr: string): string {
+    const days = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+    const date = new Date(dateStr); // 将日期字符串转换为 Date 对象
+    return days[date.getDay()]; // 返回对应的星期字符串
+  }
+
   onPageShow(): void {
     if (Logged()) {
       this.change = !this.change
@@ -212,11 +109,7 @@ struct Index {
     Logger.info('new uid = ' + this.uid);
   }
 
-  private getDayOfWeek(dateStr: string): string {
-    const days = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
-    const date = new Date(dateStr); // 将日期字符串转换为 Date 对象
-    return days[date.getDay()]; // 返回对应的星期字符串
-  }
+
 
   // 自定义导航页签的样式
   @Builder
@@ -349,9 +242,9 @@ struct Index {
               .borderRadius(4)
               .height(24);
             }
-            ForEach(entry[1], (singleGame: Game, gameIndex: number) => {
+            ForEach(entry[1], (singleGame: Game) => {
               ListItem() {
-                GameItem({ game: singleGame })
+                GameItem({ game : singleGame })
               }
             })
           })

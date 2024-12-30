@@ -1,9 +1,14 @@
 import { App, router } from '@kit.ArkUI';
+import PlayerViewModel from '../viewmodel/PlayerViewModel';
+import TeamViewModel from '../viewmodel/TeamViewModel'
 import CommonConstants from '../constants/CommonConstants';
 import { Game, StatComparison } from '../model/Game';
 import { Player } from '../model/Player';
 import Logger from '../utils/Logger';
 import { Container } from '@kit.ArkGraphics3D';
+import { Team } from '../model/Team';
+
+
 
 
 @Entry
@@ -13,6 +18,30 @@ export struct GameDetail {
   @Prop game: Game = this.params['game'];
   private controller: TabsController = new TabsController()
   @State currentIndex: number = 0
+  private teamA : Team = new Team;
+  private teamB : Team = new Team;
+  private players_A : Player[] = [];
+  private players_B : Player[] = [];
+
+  generateStats(): StatComparison[] {
+    return [
+      { label: '场次', teamAData: this.teamA.teamPlayed, teamBData: this.teamB.teamPlayed },
+      { label: '进球', teamAData: this.teamA.teamGoals, teamBData: this.teamB.teamGoals },
+      { label: '失球', teamAData: this.teamA.teamLoss, teamBData: this.teamB.teamLoss },
+      { label: '胜场', teamAData: this.teamA.teamWin, teamBData: this.teamB.teamWin },
+      { label: '负场', teamAData: this.teamA.teamLose, teamBData: this.teamB.teamLose },
+      { label: '平局', teamAData: this.teamA.teamDraw, teamBData: this.teamB.teamDraw},
+      { label: '助攻', teamAData: this.teamA.teamSupport, teamBData: this.teamB.teamSupport },
+      { label: '黄牌', teamAData: this.teamA.teamYellow, teamBData: this.teamB.teamYellow },
+    ];
+  }
+
+  async aboutToAppear() {
+    this.teamA = await TeamViewModel.getTeam(this.game.team1);
+    this.teamB = await TeamViewModel.getTeam(this.game.team2);
+    this.players_A = await PlayerViewModel.getPlayerByTeam(this.teamA.teamName);
+    this.players_B = await PlayerViewModel.getPlayerByTeam(this.teamB.teamName);
+  }
   build() {
     if (this.game.status === '已结束') {
       Column() {
@@ -34,7 +63,7 @@ export struct GameDetail {
 
             Row() {
               // 比赛时间 Text 在最中间
-              Text(this.game.time.toString())
+              Text(this.game.gameTime.toString())
                 .margin({ top: 15 ,right:18})
                 .fontSize(14)
                 .fontColor('#ff4f4f4f')
@@ -45,14 +74,14 @@ export struct GameDetail {
           }
 
           Row(){
-            Image($r(this.game.teamA.teamImageUrl))
+            Image($r(this.teamA.teamImageUrl))
               .width(70)
               .height(70)
               .borderRadius(50)
               .margin({ right: 20 ,top:30});
 
             // 比分
-            Text(`${this.game.teamAGoals} : ${this.game.teamBGoals}`)
+            Text(`${this.game.team1Score} : ${this.game.team2Score}`)
               .fontSize(40)
               .fontWeight('bold')
               .fontColor('#ffffff')
@@ -61,19 +90,19 @@ export struct GameDetail {
               .fontWeight('bold');
 
             // 队伍B队徽
-            Image($r(this.game.teamB.teamImageUrl))
+            Image($r(this.teamB.teamImageUrl))
               .width(70)
               .height(70)
               .borderRadius(50)
               .margin({ left: 20 ,top:30});
           }
           Row(){
-            Text(this.game.teamA.teamName)
+            Text(this.teamA.teamName)
               .fontSize(18)
               .margin({top:15,right:80})
               .fontColor('#ffffffff')
 
-            Text(this.game.teamB.teamName)
+            Text(this.teamB.teamName)
               .fontSize(18)
               .margin({top:15,left:80})
               .fontColor('#ffffffff')
@@ -146,7 +175,7 @@ export struct GameDetail {
 
             Row(){
               Column(){
-                ForEach(this.game.teamA.players, (player:Player)=>{
+                ForEach(this.players_A, (player:Player)=>{
                   Row() {
                     // 球员号码
                     Text(player.number.toString())
@@ -175,7 +204,7 @@ export struct GameDetail {
               .justifyContent(FlexAlign.Start) // 确保从顶部开始对齐
 
               Column(){
-                ForEach(this.game.teamB.players, (player:Player)=>{
+                ForEach(this.players_B, (player:Player)=>{
                   Row() {
                     // 球员号码
                     Text(player.number.toString())
@@ -211,12 +240,12 @@ export struct GameDetail {
         }else {
           Column(){
             Row() {
-              Text(this.game.teamA.teamName)
+              Text(this.teamB.teamName)
                 .fontSize(16)
                 .fontWeight('bold')
                 .margin({ left: 70, top: 15, bottom: 10 })
                 .fontColor('#000000');
-              Text(this.game.teamB.teamName)
+              Text(this.teamB.teamName)
                 .fontSize(16)
                 .fontWeight('bold')
                 .margin({ right: 70, top: 15, bottom: 10 })
@@ -299,7 +328,7 @@ export struct GameDetail {
 
             Row() {
               // 比赛时间 Text 在最中间
-              Text(this.game.time.toString())
+              Text(this.game.gameTime.toString())
                 .margin({ top: 15 ,right:18})
                 .fontSize(14)
                 .fontColor('#ff4f4f4f')
@@ -309,7 +338,7 @@ export struct GameDetail {
             .width('100%') // 确保 Row 容器占满宽度
           }
           Row(){
-            Image($r(this.game.teamA.teamImageUrl))
+            Image($r(this.teamA.teamImageUrl))
               .width(70)
               .height(70)
               .borderRadius(50)
@@ -325,19 +354,19 @@ export struct GameDetail {
               .fontWeight('bold');
 
             // 队伍B队徽
-            Image($r(this.game.teamB.teamImageUrl))
+            Image($r(this.teamB.teamImageUrl))
               .width(70)
               .height(70)
               .borderRadius(50)
               .margin({ left: 20 ,top:30});
           }
           Row(){
-            Text(this.game.teamA.teamName)
+            Text(this.teamA.teamName)
               .fontSize(18)
               .margin({top:15,right:80})
               .fontColor('#ffffffff')
 
-            Text(this.game.teamB.teamName)
+            Text(this.teamB.teamName)
               .fontSize(18)
               .margin({top: 15,left:80})
               .fontColor('#ffffffff')
@@ -410,7 +439,7 @@ export struct GameDetail {
 
             Row(){
               Column(){
-                ForEach(this.game.teamA.players, (player:Player)=>{
+                ForEach(this.players_A, (player:Player)=>{
                   Row() {
                     // 球员号码
                     Text(player.number.toString())
@@ -439,7 +468,7 @@ export struct GameDetail {
               .justifyContent(FlexAlign.Start) // 确保从顶部开始对齐
 
               Column(){
-                ForEach(this.game.teamB.players, (player:Player)=>{
+                ForEach(this.players_B, (player:Player)=>{
                   Row() {
                     // 球员号码
                     Text(player.number.toString())
@@ -475,12 +504,12 @@ export struct GameDetail {
         }else {
           Column(){
             Row() {
-              Text(this.game.teamA.teamName)
+              Text(this.teamA.teamName)
                 .fontSize(16)
                 .fontWeight('bold')
                 .margin({ left: 70, top: 15, bottom: 10 })
                 .fontColor('#000000');
-              Text(this.game.teamB.teamName)
+              Text(this.teamB.teamName)
                 .fontSize(16)
                 .fontWeight('bold')
                 .margin({ right: 70, top: 15, bottom: 10 })
@@ -562,7 +591,7 @@ export struct GameDetail {
 
             Row() {
               // 比赛时间 Text 在最中间
-              Text(this.game.time.toString())
+              Text(this.game.gameTime.toString())
                 .margin({ top: 15 ,right:18})
                 .fontSize(14)
                 .fontColor('#ff4f4f4f')
@@ -572,7 +601,7 @@ export struct GameDetail {
             .width('100%') // 确保 Row 容器占满宽度
           }
           Row(){
-            Image($r(this.game.teamA.teamImageUrl))
+            Image($r(this.teamA.teamImageUrl))
               .width(70)
               .height(70)
               .borderRadius(50)
@@ -588,19 +617,19 @@ export struct GameDetail {
               .fontWeight('bold');
 
             // 队伍B队徽
-            Image($r(this.game.teamB.teamImageUrl))
+            Image($r(this.teamB.teamImageUrl))
               .width(70)
               .height(70)
               .borderRadius(50)
               .margin({ left: 20 ,top:30});
           }
           Row(){
-            Text(this.game.teamA.teamName)
+            Text(this.teamA.teamName)
               .fontSize(18)
               .margin({top:15,right:80})
               .fontColor('#ffffffff')
 
-            Text(this.game.teamB.teamName)
+            Text(this.teamB.teamName)
               .fontSize(18)
               .margin({top: 15,left:80})
               .fontColor('#ffffffff')
@@ -676,7 +705,7 @@ export struct GameDetail {
 
             Row(){
               Column(){
-                ForEach(this.game.teamA.players, (player:Player)=>{
+                ForEach(this.players_A, (player:Player)=>{
                   Row() {
                     // 球员号码
                     Text(player.number.toString())
@@ -705,7 +734,7 @@ export struct GameDetail {
               .justifyContent(FlexAlign.Start) // 确保从顶部开始对齐
 
               Column(){
-                ForEach(this.game.teamB.players, (player:Player)=>{
+                ForEach(this.players_B, (player:Player)=>{
                   Row() {
                     // 球员号码
                     Text(player.number.toString())
@@ -741,12 +770,12 @@ export struct GameDetail {
         }else {
           Column(){
             Row() {
-              Text(this.game.teamA.teamName)
+              Text(this.teamA.teamName)
                 .fontSize(16)
                 .fontWeight('bold')
                 .margin({ left: 70, top: 15, bottom: 10 })
                 .fontColor('#000000');
-              Text(this.game.teamB.teamName)
+              Text(this.teamB.teamName)
                 .fontSize(16)
                 .fontWeight('bold')
                 .margin({ right: 70, top: 15, bottom: 10 })

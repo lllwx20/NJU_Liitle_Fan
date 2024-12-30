@@ -1,11 +1,22 @@
 import { Game } from "../model/Game";
+import { Team } from "../model/Team";
 import { router } from '@kit.ArkUI';
 import Logger from '../utils/Logger';
+import  GameViewModel  from '../viewmodel/GameViewModel'
+import TeamViewModel from '../viewmodel/TeamViewModel'
 
 @Component
 export struct GameItem {
-  @Prop game: Game;
+  @Prop game : Game ;
+  private teamA : Team = new Team;
+  private teamB : Team = new Team;
 
+
+
+  async aboutToAppear() {
+    this.teamA = await TeamViewModel.getTeam(this.game.team1);
+    this.teamB = await TeamViewModel.getTeam(this.game.team2);
+  }
   build() {
 
     Column()
@@ -13,7 +24,7 @@ export struct GameItem {
 
       // 添加时间与顶部分割线的间距
       Column() {
-        Text(this.game.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })) // 24小时制显示时分
+        Text(this.game.gameTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })) // 24小时制显示时分
           .fontSize(14)
           .textAlign(TextAlign.Center)
           .fontColor('#ff858585')
@@ -23,21 +34,21 @@ export struct GameItem {
       Row() {
         Row() {
           // 队伍A的名称
-          Text(this.game.teamA.teamName)
+          Text(this.teamA.teamName)
             .fontSize(15)
             .textAlign(TextAlign.Center)
             .margin({ right: 8 })
             .fontColor('#ff262626');
 
           // 队伍A的logo
-          Image($r(this.game.teamA.teamImageUrl))
+          Image($r(this.teamB.teamImageUrl))
             .width(38)
             .height(38)
             .borderRadius(50)
             .margin({ right: 12 });
         }
         if (this.game.status==='已结束'){
-          Text(`${this.game.teamAGoals} : ${this.game.teamBGoals}`)
+          Text(`${this.game.team1Score} : ${this.game.team2Score}`)
             .fontSize(25)
             .fontStyle(FontStyle.Italic)
             .fontWeight('bold')
@@ -59,14 +70,14 @@ export struct GameItem {
 
         Row() {
           // 队伍B的logo
-          Image($r(this.game.teamB.teamImageUrl))
+          Image($r(this.teamA.teamImageUrl))
             .width(38)
             .height(38)
             .borderRadius(50)
             .margin({ left: 12 });
 
           // 队伍B的名称
-          Text(this.game.teamB.teamName)
+          Text(this.teamB.teamName)
             .fontSize(15)
             .textAlign(TextAlign.Center)
             .margin({ left: 8 })
