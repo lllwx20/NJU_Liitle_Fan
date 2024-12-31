@@ -10,8 +10,8 @@ import { getUid, Logged, setChanged } from "../utils/PreferenceUtil";
 @Entry
 @Component
 export struct GameDetail {
-  @Prop params: object = router.getParams();
-  @Prop game: Game = this.params['game'];
+  @State params: object = router.getParams();
+  @State game: Game = this.params['game'];
   private controller: TabsController = new TabsController()
   @State currentIndex: number = 0
   @State teamA : Team = new Team;
@@ -38,6 +38,7 @@ export struct GameDetail {
     this.teamB = await TeamViewModel.getTeam(this.game.team2);
     this.players_A = await PlayerViewModel.getPlayerByTeam(this.teamA.teamName);
     this.players_B = await PlayerViewModel.getPlayerByTeam(this.teamB.teamName);
+    this.game.stats = this.generateStats();
   }
   build() {
     if (this.game.status === '已结束') {
@@ -60,14 +61,14 @@ export struct GameDetail {
 
             Row() {
               // 比赛时间 Text 在最中间
-              Text(this.game.gameTime.toString())
-                .margin({ top: 15 ,right:18})
+              Text(new Date(this.game.gameTime).toLocaleDateString() + '  '+new Date(this.game.gameTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) )
+                .margin({ top: 15,right :45})
                 .fontSize(15)
                 .fontWeight('bold')
             }
             .justifyContent(FlexAlign.Center) // 水平居中
             .alignItems(VerticalAlign.Center) // 垂直居中
-            .width('100%') // 确保 Row 容器占满宽度
+            .width('99%') // 确保 Row 容器占满宽度
           }
 
           Row(){
@@ -75,7 +76,13 @@ export struct GameDetail {
               .width(70)
               .height(70)
               .borderRadius(50)
-              .margin({ right: 20 ,top:30});
+              .margin({ right: 20 ,top:30})
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/TeamDetail',
+                  params: { tid: this.teamA.id }
+                })
+              })
 
             // 比分
             Text(`${this.game.team1Score} : ${this.game.team2Score}`)
@@ -90,18 +97,36 @@ export struct GameDetail {
               .width(70)
               .height(70)
               .borderRadius(50)
-              .margin({ left: 20 ,top:30});
+              .margin({ left: 20 ,top:30})
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/TeamDetail',
+                  params: { tid: this.teamB.id }
+                })
+              })
           }
           Row(){
             Text(this.teamA.teamName)
               .fontSize(18)
               .margin({top:15,right:80})
               .fontWeight('bold')
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/TeamDetail',
+                  params: { tid: this.teamA.id }
+                })
+              })
 
             Text(this.teamB.teamName)
               .fontSize(18)
               .margin({top:15,left:80})
               .fontWeight('bold')
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/TeamDetail',
+                  params: { tid: this.teamB.id }
+                })
+              })
           }
           Row(){
             Text("已结束")
@@ -157,12 +182,12 @@ export struct GameDetail {
               Text('主队')
                 .fontSize(16)
                 .fontWeight('bold')
-                .margin({ left: 70, top: 15, bottom: 10 })
+                .margin({ left: 90, top: 15, bottom: 10 })
                 .fontColor('#000000');
               Text('客队')
                 .fontSize(16)
                 .fontWeight('bold')
-                .margin({ right: 70, top: 15, bottom: 10 })
+                .margin({ right: 90, top: 15, bottom: 10 })
                 .fontColor('#000000');
             }
             .width('100%')
@@ -191,6 +216,12 @@ export struct GameDetail {
                       .fontSize(14)
                       .fontColor('#000000');
                   }
+                  .onClick(()=>{
+                    router.pushUrl({
+                      url: 'pages/PlayerDetail',
+                      params: { Player: player }
+                    })
+                  })
                   .margin({ bottom: 10 }); // 每行之间的间距
                 });
               }
@@ -220,6 +251,12 @@ export struct GameDetail {
                       .fontSize(14)
                       .fontColor('#000000');
                   }
+                  .onClick(()=>{
+                    router.pushUrl({
+                      url: 'pages/PlayerDetail',
+                      params: { Player: player }
+                    })
+                  })
                   .margin({ bottom: 10 }); // 每行之间的间距
                 });
               }
@@ -235,15 +272,15 @@ export struct GameDetail {
         }else {
           Column(){
             Row() {
-              Text(this.teamB.teamName)
+              Text(this.teamA.teamName)
                 .fontSize(16)
                 .fontWeight('bold')
-                .margin({ left: 70, top: 15, bottom: 10 })
+                .margin({ left: 90, top: 15, bottom: 10 })
                 .fontColor('#000000');
               Text(this.teamB.teamName)
                 .fontSize(16)
                 .fontWeight('bold')
-                .margin({ right: 70, top: 15, bottom: 10 })
+                .margin({ right: 90, top: 15, bottom: 10 })
                 .fontColor('#000000');
             }
             .width('100%')
@@ -323,21 +360,28 @@ export struct GameDetail {
 
             Row() {
               // 比赛时间 Text 在最中间
-              Text(this.game.gameTime.toString())
-                .margin({ top: 15 ,right:18})
+              Text(new Date(this.game.gameTime).toLocaleDateString() + '  '+new Date(this.game.gameTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) )
+                .margin({ top: 15,right :45})
                 .fontSize(15)
                 .fontWeight('bold')
             }
             .justifyContent(FlexAlign.Center) // 水平居中
             .alignItems(VerticalAlign.Center) // 垂直居中
-            .width('100%') // 确保 Row 容器占满宽度
+            .width('99%') // 确保 Row 容器占满宽度
           }
+
           Row(){
             Image($r(this.teamA.teamImageUrl))
               .width(70)
               .height(70)
               .borderRadius(50)
-              .margin({ right: 20 ,top:30});
+              .margin({ right: 20 ,top:30})
+              .onClick(() => {
+              router.pushUrl({
+                url: 'pages/TeamDetail',
+                params: { tid: this.teamA.id }
+              })
+            })
 
             Image($r('app.media.onfire'))
               .width(30)
@@ -350,19 +394,36 @@ export struct GameDetail {
               .width(70)
               .height(70)
               .borderRadius(50)
-              .margin({ left: 20 ,top:30});
+              .margin({ left: 20 ,top:30})
+            .onClick(() => {
+              router.pushUrl({
+                url: 'pages/TeamDetail',
+                params: { tid: this.teamB.id }
+              })
+            })
           }
           Row(){
             Text(this.teamA.teamName)
               .fontSize(18)
               .margin({top:15,right:80})
               .fontWeight('bold')
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/TeamDetail',
+                  params: { tid: this.teamA.id }
+                })
+              })
 
             Text(this.teamB.teamName)
               .fontSize(18)
               .margin({top: 15,left:80})
               .fontWeight('bold')
-
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/TeamDetail',
+                  params: { tid: this.teamB.id }
+                })
+              })
           }
           Row(){
             Text("进行中")
@@ -419,12 +480,12 @@ export struct GameDetail {
               Text('主队')
                 .fontSize(16)
                 .fontWeight('bold')
-                .margin({ left: 70, top: 15, bottom: 10 })
+                .margin({ left: 90, top: 15, bottom: 10 })
                 .fontColor('#000000');
               Text('客队')
                 .fontSize(16)
                 .fontWeight('bold')
-                .margin({ right: 70, top: 15, bottom: 10 })
+                .margin({ right: 90, top: 15, bottom: 10 })
                 .fontColor('#000000');
             }
             .width('100%')
@@ -453,6 +514,12 @@ export struct GameDetail {
                       .fontSize(14)
                       .fontColor('#000000');
                   }
+                  .onClick(()=>{
+                    router.pushUrl({
+                      url: 'pages/PlayerDetail',
+                      params: { Player: player }
+                    })
+                  })
                   .margin({ bottom: 10 }); // 每行之间的间距
                 });
               }
@@ -482,6 +549,12 @@ export struct GameDetail {
                       .fontSize(14)
                       .fontColor('#000000');
                   }
+                  .onClick(()=>{
+                    router.pushUrl({
+                      url: 'pages/PlayerDetail',
+                      params: { Player: player }
+                    })
+                  })
                   .margin({ bottom: 10 }); // 每行之间的间距
                 });
               }
@@ -500,12 +573,12 @@ export struct GameDetail {
               Text(this.teamA.teamName)
                 .fontSize(16)
                 .fontWeight('bold')
-                .margin({ left: 70, top: 15, bottom: 10 })
+                .margin({ left: 90, top: 15, bottom: 10 })
                 .fontColor('#000000');
               Text(this.teamB.teamName)
                 .fontSize(16)
                 .fontWeight('bold')
-                .margin({ right: 70, top: 15, bottom: 10 })
+                .margin({ right: 90, top: 15, bottom: 10 })
                 .fontColor('#000000');
             }
             .width('100%')
@@ -584,47 +657,71 @@ export struct GameDetail {
 
             Row() {
               // 比赛时间 Text 在最中间
-              Text(this.game.gameTime.toString())
-                .margin({ top: 15 ,right:18})
+              Text(new Date(this.game.gameTime).toLocaleDateString() + '  '+new Date(this.game.gameTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) )
+                .margin({ top: 15,right :45})
                 .fontSize(15)
                 .fontWeight('bold')
             }
             .justifyContent(FlexAlign.Center) // 水平居中
             .alignItems(VerticalAlign.Center) // 垂直居中
-            .width('100%') // 确保 Row 容器占满宽度
+            .width('99%') // 确保 Row 容器占满宽度
           }
           Row(){
             Image($r(this.teamA.teamImageUrl))
               .width(70)
               .height(70)
               .borderRadius(50)
-              .margin({ right: 20 ,top:30});
+              .margin({ right: 20 ,top:30})
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/TeamDetail',
+                  params: { tid: this.teamA.id }
+                })
+              })
 
             Text(`vs`)
               .fontSize(30)
               .fontWeight('bold')
               .textAlign(TextAlign.Center)
               .margin({ left: 10, right: 10, top:35 })
-              .fontWeight('bold');
+              .fontWeight('bold')
+              .fontStyle(FontStyle.Italic);
 
             // 队伍B队徽
             Image($r(this.teamB.teamImageUrl))
               .width(70)
               .height(70)
               .borderRadius(50)
-              .margin({ left: 20 ,top:30});
+              .margin({ left: 20 ,top:30})
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/TeamDetail',
+                  params: { tid: this.teamB.id }
+                })
+              })
           }
           Row(){
             Text(this.teamA.teamName)
               .fontSize(18)
               .margin({top:15, right: 60})
               .fontWeight('bold')
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/TeamDetail',
+                  params: { tid: this.teamA.id }
+                })
+              })
 
             Text(this.teamB.teamName)
               .fontSize(18)
               .margin({top: 15, left: 60})
               .fontWeight('bold')
-
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/TeamDetail',
+                  params: { tid: this.teamB.id }
+                })
+              })
           }
           Row(){
             Text("未开始")
@@ -684,12 +781,12 @@ export struct GameDetail {
               Text('主队')
                 .fontSize(16)
                 .fontWeight('bold')
-                .margin({ left: 70, top: 15, bottom: 10 })
+                .margin({ left: 90, top: 15, bottom: 10 })
                 .fontColor('#000000');
               Text('客队')
                 .fontSize(16)
                 .fontWeight('bold')
-                .margin({ right: 70, top: 15, bottom: 10 })
+                .margin({ right: 90, top: 15, bottom: 10 })
                 .fontColor('#000000');
             }
             .width('100%')
@@ -718,6 +815,12 @@ export struct GameDetail {
                       .fontSize(14)
                       .fontColor('#000000');
                   }
+                  .onClick(()=>{
+                    router.pushUrl({
+                      url: 'pages/PlayerDetail',
+                      params: { Player: player }
+                    })
+                  })
                   .margin({ bottom: 10 }); // 每行之间的间距
                 });
               }
@@ -747,6 +850,12 @@ export struct GameDetail {
                       .fontSize(14)
                       .fontColor('#000000');
                   }
+                  .onClick(()=>{
+                    router.pushUrl({
+                      url: 'pages/PlayerDetail',
+                      params: { Player: player }
+                    })
+                  })
                   .margin({ bottom: 10 }); // 每行之间的间距
                 });
               }
@@ -765,12 +874,12 @@ export struct GameDetail {
               Text(this.teamA.teamName)
                 .fontSize(16)
                 .fontWeight('bold')
-                .margin({ left: 70, top: 15, bottom: 10 })
+                .margin({ left: 90, top: 15, bottom: 10 })
                 .fontColor('#000000');
               Text(this.teamB.teamName)
                 .fontSize(16)
                 .fontWeight('bold')
-                .margin({ right: 70, top: 15, bottom: 10 })
+                .margin({ right: 90, top: 15, bottom: 10 })
                 .fontColor('#000000');
             }
             .width('100%')

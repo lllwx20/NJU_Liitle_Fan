@@ -33,6 +33,37 @@ export default struct MyPage {
   @State cancel: boolean = false
 
 
+  async refreshData() {
+    if (this.uid != 0) {
+      let user: User = await UserViewModel.getUser(this.uid);
+      this.userName = user.name;
+      this.avatar = user.avatar;
+      this.games = [];
+      for (let i: number = 0; i < user.games.length; i++) {
+        this.games.push(await GameViewModel.getGameById(user.games[i]));
+        this.games[i].gameTime = new Date(this.games[i].gameTime);
+        this.getGameStatus(this.games[i]);
+      }
+      this.games.sort((g1: Game, g2: Game) => { return g1.gameTime.getTime() - g2.gameTime.getTime() });
+      this.tid = user.tid;
+
+      if (this.tid != 0) {
+        let team: Team = await TeamViewModel.getTeam(this.tid);
+        this.index = await TeamViewModel.getTeamRank(this.tid) + 1;
+        this.mainTeam = team.teamName;
+        this.TeamImageUrl = team.teamImageUrl;
+      } else {
+        this.teams = await TeamViewModel.getTeamList();
+        this.teamItems = [];
+        this.tidArray = [];
+        for (let i: number = 0; i < this.teams.length; i++) {
+          this.teamItems.push({ value: this.teams[i].teamName, icon: this.teams[i].teamImageUrl });
+          this.tidArray.push(this.teams[i].id);
+        }
+      }
+    }
+  }
+
   getGameStatus(game : Game) {
     const currentTime = new Date(); // 获取当前时间
     const gameStartTime = game.gameTime;
@@ -334,11 +365,24 @@ export default struct MyPage {
       .borderRadius(15)
 
       Column() {
-        Text("我的订阅")
-          .fontSize(20)
-          .height(50)
-          .fontWeight(FontWeight.Bold)
-          .textAlign(TextAlign.Center)
+        Row() {
+          Text("我的订阅")
+            .fontSize(20)
+            .height(50)
+            .fontWeight(FontWeight.Bold)
+            .textAlign(TextAlign.Center)
+
+          if(this.login) {
+            Image($r('app.media.refresh'))
+              .height(25)
+              .width(25)
+              .position({ right: -125, top: 10 })
+              .onClick(async () => {
+                await this.refreshData();
+                promptAction.showToast({ message: '数据已刷新', bottom: 400 });
+              })
+          }
+        }
 
         Scroll() {
           List() {

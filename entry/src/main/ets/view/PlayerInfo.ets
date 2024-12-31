@@ -14,7 +14,7 @@ export default struct PlayerInfo {
               Text('出生年月').fontSize(20).fontColor(Color.Grey).fontWeight(FontWeight.Bold).textAlign(TextAlign.Start)
               Text(this.Player.bornYearMonth).fontSize(20).fontWeight(FontWeight.Bold).textAlign(TextAlign.Start)
               Text(' ')
-              Text('参赛年份').fontSize(20).fontColor(Color.Grey).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
+              Text('参赛经历').fontSize(20).fontColor(Color.Grey).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
               Text(this.Player.playYear+'年').fontSize(20).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
             }
             .height('50%')
@@ -53,7 +53,7 @@ export default struct PlayerInfo {
             .height('50%')
             Column(){
               Text('上场时间').fontSize(20).fontColor(Color.Grey).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
-              Text(this.Player.starterGame * 80 + (this.Player.playedGame - this.Player.starterGame) * 20 + '').fontSize(20).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
+              Text(this.Player.starterGame * 80 + (this.Player.playedGame - this.Player.starterGame) * 20 + 'min').fontSize(20).fontWeight(FontWeight.Bold).textAlign(TextAlign.End)
             }
             .height('50%')
             Column(){
