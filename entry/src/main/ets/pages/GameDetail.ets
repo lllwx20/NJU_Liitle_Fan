@@ -79,7 +79,13 @@ export struct GameDetail {
               .width(70)
               .height(70)
               .borderRadius(50)
-              .margin({ right: 20 ,top:30});
+              .margin({ right: 20 ,top:30})
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/TeamDetail',
+                  params: { tid: this.teamA.id }
+                })
+              })
 
             // 比分
             Text(`${this.game.team1Score} : ${this.game.team2Score}`)
@@ -95,7 +101,13 @@ export struct GameDetail {
               .width(70)
               .height(70)
               .borderRadius(50)
-              .margin({ left: 20 ,top:30});
+              .margin({ left: 20 ,top:30})
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/TeamDetail',
+                  params: { tid: this.teamB.id }
+                })
+              })
           }
           Row(){
             Text(this.teamA.teamName)
@@ -197,6 +209,12 @@ export struct GameDetail {
                       .fontSize(14)
                       .fontColor('#000000');
                   }
+                  .onClick(()=>{
+                    router.pushUrl({
+                      url: 'pages/PlayerDetail',
+                      params: { Player: player }
+                    })
+                  })
                   .margin({ bottom: 10 }); // 每行之间的间距
                 });
               }
@@ -226,6 +244,12 @@ export struct GameDetail {
                       .fontSize(14)
                       .fontColor('#000000');
                   }
+                  .onClick(()=>{
+                    router.pushUrl({
+                      url: 'pages/PlayerDetail',
+                      params: { Player: player }
+                    })
+                  })
                   .margin({ bottom: 10 }); // 每行之间的间距
                 });
               }
@@ -343,7 +367,13 @@ export struct GameDetail {
               .width(70)
               .height(70)
               .borderRadius(50)
-              .margin({ right: 20 ,top:30});
+              .margin({ right: 20 ,top:30})
+              .onClick(() => {
+              router.pushUrl({
+                url: 'pages/TeamDetail',
+                params: { tid: this.teamA.id }
+              })
+            })
 
             // 比分
             Text(`? : ?`)
@@ -359,7 +389,13 @@ export struct GameDetail {
               .width(70)
               .height(70)
               .borderRadius(50)
-              .margin({ left: 20 ,top:30});
+              .margin({ left: 20 ,top:30})
+            .onClick(() => {
+              router.pushUrl({
+                url: 'pages/TeamDetail',
+                params: { tid: this.teamB.id }
+              })
+            })
           }
           Row(){
             Text(this.teamA.teamName)
@@ -461,6 +497,12 @@ export struct GameDetail {
                       .fontSize(14)
                       .fontColor('#000000');
                   }
+                  .onClick(()=>{
+                    router.pushUrl({
+                      url: 'pages/PlayerDetail',
+                      params: { Player: player }
+                    })
+                  })
                   .margin({ bottom: 10 }); // 每行之间的间距
                 });
               }
@@ -490,6 +532,12 @@ export struct GameDetail {
                       .fontSize(14)
                       .fontColor('#000000');
                   }
+                  .onClick(()=>{
+                    router.pushUrl({
+                      url: 'pages/PlayerDetail',
+                      params: { Player: player }
+                    })
+                  })
                   .margin({ bottom: 10 }); // 每行之间的间距
                 });
               }
@@ -606,7 +654,13 @@ export struct GameDetail {
               .width(70)
               .height(70)
               .borderRadius(50)
-              .margin({ right: 20 ,top:30});
+              .margin({ right: 20 ,top:30})
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/TeamDetail',
+                  params: { tid: this.teamA.id }
+                })
+              })
 
             // 比分
             Text(`? : ?`)
@@ -622,7 +676,13 @@ export struct GameDetail {
               .width(70)
               .height(70)
               .borderRadius(50)
-              .margin({ left: 20 ,top:30});
+              .margin({ left: 20 ,top:30})
+              .onClick(() => {
+                router.pushUrl({
+                  url: 'pages/TeamDetail',
+                  params: { tid: this.teamB.id }
+                })
+              })
           }
           Row(){
             Text(this.teamA.teamName)
@@ -727,6 +787,12 @@ export struct GameDetail {
                       .fontSize(14)
                       .fontColor('#000000');
                   }
+                  .onClick(()=>{
+                    router.pushUrl({
+                      url: 'pages/PlayerDetail',
+                      params: { Player: player }
+                    })
+                  })
                   .margin({ bottom: 10 }); // 每行之间的间距
                 });
               }
@@ -756,6 +822,12 @@ export struct GameDetail {
                       .fontSize(14)
                       .fontColor('#000000');
                   }
+                  .onClick(()=>{
+                    router.pushUrl({
+                      url: 'pages/PlayerDetail',
+                      params: { Player: player }
+                    })
+                  })
                   .margin({ bottom: 10 }); // 每行之间的间距
                 });
               }
