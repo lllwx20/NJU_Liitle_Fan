@@ -100,18 +100,18 @@ struct RatingDialog {
       })
 
       Row() {
-        Button('取消')
-          .margin(10)
-          .onClick(() => {
-            this.controller.close();
-          })
-          .backgroundColor(Color.Gray)
         Button('确定')
           .margin(10)
           .onClick(() => {
             this.confirm();
             this.controller.close();
           })
+        Button('取消')
+          .margin(10)
+          .onClick(() => {
+            this.controller.close();
+          })
+          .backgroundColor(Color.Gray)
       }.margin({ top: 20, bottom: 20 })
     }
     .width('100%')
