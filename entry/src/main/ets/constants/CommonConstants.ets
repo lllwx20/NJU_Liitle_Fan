@@ -4,7 +4,7 @@
  */
 export default class CommonConstants {
 
-  static readonly SERVER: string = 'http://172.19.184.2:8080';
+  static readonly SERVER: string = 'http://172.19.180.189:8080';
 
   static readonly LOGIN: string = '/api/users/login';
 
