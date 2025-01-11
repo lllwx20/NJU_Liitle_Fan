@@ -21,7 +21,7 @@ class UserViewModel {
           Logger.info(url + ' Login', JSON.stringify(data));
           resolve(data.data);
         } else {
-          Logger.error(url + ' getList failed', JSON.stringify(data));
+          Logger.error(url + ' Login failed', JSON.stringify(data));
           promptAction.showToast({message : "手机号或密码错误！"})
           reject($r('app.string.page_none_msg'));
         }
@@ -35,10 +35,10 @@ class UserViewModel {
       httpRequestGet(url).then((data: ResponseResult) => {
         if (data.code === CommonConstants.SERVER_CODE_SUCCESS) {
           promptAction.showToast({message : "选择成功！"})
-          Logger.info(url + ' Login', JSON.stringify(data));
+          Logger.info(url + ' setMainTeam', JSON.stringify(data));
           resolve(data.data);
         } else {
-          Logger.error(url + ' getList failed', JSON.stringify(data));
+          Logger.error(url + ' setMainTeam failed', JSON.stringify(data));
           promptAction.showToast({message : "选择失败！"})
           reject($r('app.string.page_none_msg'));
         }
@@ -51,10 +51,10 @@ class UserViewModel {
       let url = `${CommonConstants.SERVER}${CommonConstants.SUBSCRIBE}${uid}/${gid}`;
       httpRequestGet(url).then((data: ResponseResult) => {
         if (data.code === CommonConstants.SERVER_CODE_SUCCESS) {
-          Logger.info(url + ' Login', JSON.stringify(data));
+          Logger.info(url + ' subscribe', JSON.stringify(data));
           resolve(data.data);
         } else {
-          Logger.error(url + ' getList failed', JSON.stringify(data));
+          Logger.error(url + ' subscribe failed', JSON.stringify(data));
           reject($r('app.string.page_none_msg'));
         }
       })
@@ -66,10 +66,10 @@ class UserViewModel {
       let url = `${CommonConstants.SERVER}${CommonConstants.CANCEL}${uid}/${gid}`;
       httpRequestGet(url).then((data: ResponseResult) => {
         if (data.code === CommonConstants.SERVER_CODE_SUCCESS) {
-          Logger.info(url + ' Login', JSON.stringify(data));
+          Logger.info(url + ' cancel', JSON.stringify(data));
           resolve(data.data);
         } else {
-          Logger.error(url + ' getList failed', JSON.stringify(data));
+          Logger.error(url + ' cancel failed', JSON.stringify(data));
           reject($r('app.string.page_none_msg'));
         }
       })
@@ -81,10 +81,10 @@ class UserViewModel {
       let url = `${CommonConstants.SERVER}${CommonConstants.CLEAR_OLD}${uid}/${tid}`;
       httpRequestGet(url).then((data: ResponseResult) => {
         if (data.code === CommonConstants.SERVER_CODE_SUCCESS) {
-          Logger.info(url + ' Login', JSON.stringify(data));
+          Logger.info(url + ' clear', JSON.stringify(data));
           resolve(data.data);
         } else {
-          Logger.error(url + ' getList failed', JSON.stringify(data));
+          Logger.error(url + ' clear failed', JSON.stringify(data));
           reject($r('app.string.page_none_msg'));
         }
       })
@@ -98,18 +98,36 @@ class UserViewModel {
     let url = `${CommonConstants.SERVER}${CommonConstants.GET_USER}${id}`;
     httpRequestGet(url).then((data: ResponseResult) => {
       if (data.code === CommonConstants.SERVER_CODE_SUCCESS) {
-        Logger.info(url + ' getList', JSON.stringify(data));
+        Logger.info(url + ' getUser', JSON.stringify(data));
         resolve(data.data);
       } else {
-        Logger.error(url + ' getList failed', JSON.stringify(data));
+        Logger.error(url + ' getUser failed', JSON.stringify(data));
         reject($r('app.string.page_none_msg'));
       }
     }).catch((err: Error) => {
-      Logger.error('getList failed', JSON.stringify(err));
+      Logger.error('getUser failed', JSON.stringify(err));
       reject($r('app.string.http_error_message'));
     });
   });
 }
+
+  getPublicKeyStr() : Promise<string> {
+    return new Promise(async (resolve: Function, reject: Function) => {
+      let url = `${CommonConstants.SERVER}${CommonConstants.GET_PUBLIC_KEY_STR}`;
+      httpRequestGet(url).then((data: ResponseResult) => {
+        if (data.code === CommonConstants.SERVER_CODE_SUCCESS) {
+          Logger.info(url + ' getPublicKeyStr', JSON.stringify(data));
+          resolve(data.data);
+        } else {
+          Logger.error(url + ' getPublicKeyStr failed', JSON.stringify(data));
+          reject($r('app.string.page_none_msg'));
+        }
+      }).catch((err: Error) => {
+        Logger.error('getPublicKeyStr failed', JSON.stringify(err));
+        reject($r('app.string.http_error_message'));
+      });
+    });
+  }
 
 }
 

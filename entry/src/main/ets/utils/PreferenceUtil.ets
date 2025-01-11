@@ -44,7 +44,7 @@ export function clearChange() {
 }
 
 
-export function Login(uid : number) {
+export function LoginPreferences(uid : number) {
   let dataPreferences =  getPreference();
   dataPreferences.putSync('uid', uid)
 }

@@ -1,66 +1,27 @@
 import router from '@ohos.router';
-import http from '@ohos.net.http';
-import ResponseResult from '../model/ResponseResult';
-import CommonConstants from '../constants/CommonConstants';
 import UserViewModel from '../viewmodel/UserViewModel';
 import Logger from '../utils/Logger';
-import { Login } from '../utils/PreferenceUtil';
-import { promptAction } from '@kit.ArkUI';
-
+import { LoginPreferences } from '../utils/PreferenceUtil';
+import { encryptRSA } from '../utils/RSAUtil';
 
 @Entry
 @Component
-struct Index {
+struct Login {
   @State phone: string = ''
   @State password: string = '' //密码
   @State loginError: string = ''
   @State token: string = ''
   @StorageLink("topRectHeight") topHeight: number = 0
   @StorageLink("bottomRectHeight") bottomHeight: number = 0
+  private publicStr : string = ''
+
 
   async onLoginRequest() {
-    /*const httpRequest = http.createHttp();
-
-    // 通过 URL 查询参数发送请求
-    const url = `${CommonConstants.SERVER}${CommonConstants.LOGIN}${encodeURIComponent(this.phone)}&password=${encodeURIComponent(this.password)}`;
-
-    console.log(url);
-    const promise = httpRequest.request(url, {
-      method: http.RequestMethod.POST,
-      header: { 'Content-Type': 'application/json; charset=utf-8' },
-    });
-
-    promise.then((data) => {
-      console.info('返回结果: ' + data.result);
-      let result: ResponseResult;
-
-      // 类型检查并解析 JSON 字符串
-      if (typeof data.result === 'string') {
-        result = JSON.parse(data.result) as ResponseResult;
-      } else {
-        result = data.result as ResponseResult;
-      }
-
-      if (result.code === "000") {
-        if (typeof result.data === 'string') {
-          this.token = result.data
-          console.log("get token, token = ",this.token)
-          router.pushUrl({ url: 'pages/Index' }); // 跳转到 Index界面
-        } else {
-          this.loginError = "result.result not string "
-          console.log("result.result not string "+ result.data);
-        }
-      } else {
-        this.loginError = result.msg as string;
-
-      }
-    }).catch((err: Error) => {
-      console.error('错误信息：' + JSON.stringify(err));
-      this.loginError = '网络错误，请稍后再试';
-    });*/
-    let uid : number = await UserViewModel.Login({phone : this.phone, password : this.password})
+    this.publicStr = await UserViewModel.getPublicKeyStr()
+    let encryptPassword: string = await  encryptRSA(this.publicStr,this.password)
+    let uid : number = await UserViewModel.Login({phone : this.phone, password : encryptPassword})
     Logger.info("uid" + uid)
-    Login(uid)
+    LoginPreferences(uid)
 
     router.back({url : 'pages/Index', params : {
       uid : uid

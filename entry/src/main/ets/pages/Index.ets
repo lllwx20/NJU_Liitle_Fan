@@ -3,7 +3,7 @@ import Logger from '../utils/Logger';
 import { TeamItem } from '../view/TeamItem';
 import { GameItem } from '../view/GameItem';
 import TeamViewModel from '../viewmodel/TeamViewModel';
-import FirstPage from './FirstPage';
+import FirstPage from './News';
 import PlayerPage from './PlayerPage';
 import MyPage from './MyPage';
 import { getUid, Logged } from '../utils/PreferenceUtil';
